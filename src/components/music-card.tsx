@@ -8,7 +8,7 @@ import { CARD_SPACING } from '@/consts'
 import MusicSVG from '@/svgs/music.svg'
 import PlaySVG from '@/svgs/play.svg'
 import { HomeDraggableLayer } from '../app/(home)/home-draggable-layer'
-import { Pause } from 'lucide-react'
+import { Pause, Repeat } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import clsx from 'clsx'
 
@@ -24,6 +24,7 @@ export default function MusicCard() {
 	const calendarCardStyles = cardStyles.calendarCard
 
 	const [isPlaying, setIsPlaying] = useState(false)
+	const [loopMode, setLoopMode] = useState<'none' | 'single' | 'list'>('list')
 	const [currentIndex, setCurrentIndex] = useState(0)
 	const [progress, setProgress] = useState(0)
 	const audioRef = useRef<HTMLAudioElement | null>(null)
@@ -64,10 +65,28 @@ export default function MusicCard() {
 		}
 
 		const handleEnded = () => {
-			const nextIndex = (currentIndexRef.current + 1) % MUSIC_FILES.length
-			currentIndexRef.current = nextIndex
-			setCurrentIndex(nextIndex)
-			setProgress(0)
+			switch (loopMode) {
+			case 'single':
+				// 单曲循环
+				if (audioRef.current) {
+					audioRef.current.currentTime = 0
+					audioRef.current.play().catch(console.error)
+				}
+				break
+			case 'list':
+				// 列表循环
+				const nextIndex = (currentIndexRef.current + 1) % MUSIC_FILES.length
+				currentIndexRef.current = nextIndex
+				setCurrentIndex(nextIndex)
+				setProgress(0)
+				break
+			case 'none':
+			default:
+				// 不循环，停止播放
+				setIsPlaying(false)
+				setProgress(0)
+				break
+			}
 		}
 
 		const handleTimeUpdate = () => {
@@ -87,7 +106,7 @@ export default function MusicCard() {
 			audio.removeEventListener('ended', handleEnded)
 			audio.removeEventListener('loadedmetadata', handleLoadedMetadata)
 		}
-	}, [])
+	}, [loopMode])
 
 	// Handle currentIndex change - load new audio
 	useEffect(() => {
@@ -165,9 +184,38 @@ export default function MusicCard() {
 					</div>
 				</div>
 
-				<button onClick={togglePlayPause} className='flex h-10 w-10 items-center justify-center rounded-full bg-white transition-opacity hover:opacity-80'>
-					{isPlaying ? <Pause className='text-brand h-4 w-4' /> : <PlaySVG className='text-brand ml-1 h-4 w-4' />}
-				</button>
+				<div className='flex items-center gap-2'>
+							<button onClick={togglePlayPause} className='flex h-10 w-10 items-center justify-center rounded-full bg-white transition-opacity hover:opacity-80'>
+								{isPlaying ? <Pause className='text-brand h-4 w-4' /> : <PlaySVG className='text-brand ml-1 h-4 w-4' />}
+							</button>
+							<button 
+								onClick={() => {
+									// 循环切换三种模式：none -> single -> list -> none
+									if (loopMode === 'none') {
+										setLoopMode('single')
+									} else if (loopMode === 'single') {
+										setLoopMode('list')
+									} else {
+										setLoopMode('none')
+									}
+								}}
+								className={`flex h-8 w-8 items-center justify-center rounded-full transition-colors ${
+									loopMode === 'none' ? 'bg-white/80 text-secondary hover:bg-white' : 
+									loopMode === 'single' ? 'bg-brand/20 text-brand' : 
+									'bg-brand/30 text-brand'
+								}`}
+								title={
+									loopMode === 'none' ? '开启单曲循环' : 
+									loopMode === 'single' ? '开启列表循环' : 
+									'关闭循环'
+								}
+							>
+								<Repeat className='h-4 w-4' />
+								{loopMode === 'single' && (
+									<span className='absolute text-xs font-bold'>1</span>
+								)}
+							</button>
+						</div>
 			</Card>
 		</HomeDraggableLayer>
 	)
