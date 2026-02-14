@@ -133,10 +133,25 @@ export default function LikeButton({ slug = 'amis', className }: LikeButtonProps
 			}
 		} catch (error) {
 			console.error('点赞失败:', error)
-			// 即使出错也显示感谢提示
-			toast('💕感谢点赞！！💕😘')
-			// 本地增加点赞数作为降级方案
-			setCount(prev => prev + 1)
+			
+			// 检查是否已经点过赞（从localStorage获取）
+			const lastLikeTime = typeof window !== 'undefined' ? localStorage.getItem('last_like_time_' + slug) : null
+			const now = Date.now()
+			const oneDay = 24 * 60 * 60 * 1000
+			
+			// 如果24小时内已经点过赞，显示限制提示
+			if (lastLikeTime && now - parseInt(lastLikeTime) < oneDay) {
+				toast('谢谢啦😘，今天已经不能再点赞啦💕')
+			} else {
+				// 记录点赞时间
+				if (typeof window !== 'undefined') {
+					localStorage.setItem('last_like_time_' + slug, now.toString())
+				}
+				// 即使出错也显示感谢提示
+				toast('💕感谢点赞！！💕😘')
+				// 本地增加点赞数作为降级方案
+				setCount(prev => prev + 1)
+			}
 		} finally {
 			setLoading(false)
 		}
