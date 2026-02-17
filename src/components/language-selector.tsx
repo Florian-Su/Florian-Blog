@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useLanguage } from '@/i18n/context';
 import { Language } from '@/i18n/types';
@@ -11,16 +11,57 @@ const languages: Array<{ code: Language; label: string; flag: string }> = [
   { code: 'zh-TW', label: '繁體中文', flag: '🇨🇳' }
 ];
 
-export default function LanguageSelector({ direction = 'down', mobile = false }: { direction?: 'up' | 'down'; mobile?: boolean }) {
+export default function LanguageSelector({ direction = 'down', mobile = false, onListOpen }: { direction?: 'up' | 'down'; mobile?: boolean; onListOpen?: (open: boolean) => void }) {
   const { language, setLanguage } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
 
   const currentLanguage = languages.find(lang => lang.code === language);
 
+  // 处理列表展开/收起状态
+  const handleToggleOpen = () => {
+    const newOpenState = !isOpen;
+    setIsOpen(newOpenState);
+    if (onListOpen) {
+      onListOpen(newOpenState);
+    }
+  };
+
+  // 处理语言选择
+  const handleLanguageSelect = (langCode: Language) => {
+    setLanguage(langCode);
+    setIsOpen(false);
+    if (onListOpen) {
+      onListOpen(false);
+    }
+  };
+
+  // 点击列表以外的区域收起列表
+  useEffect(() => {
+    if (isOpen) {
+      const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+        const target = event.target as HTMLElement;
+        if (!target.closest('.language-selector-container')) {
+          setIsOpen(false);
+          if (onListOpen) {
+            onListOpen(false);
+          }
+        }
+      };
+
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('touchstart', handleClickOutside, { passive: true });
+
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+        document.removeEventListener('touchstart', handleClickOutside);
+      };
+    }
+  }, [isOpen, onListOpen]);
+
   return (
-    <div className="relative">
+    <div className="relative language-selector-container">
       <motion.button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={handleToggleOpen}
         initial={{ opacity: 0, scale: 0.6 }}
         animate={{ opacity: 1, scale: 1 }}
         whileHover={{ scale: 1.05 }}
@@ -44,10 +85,7 @@ export default function LanguageSelector({ direction = 'down', mobile = false }:
             {languages.map((lang) => (
               <motion.button
                 key={lang.code}
-                onClick={() => {
-                  setLanguage(lang.code);
-                  setIsOpen(false);
-                }}
+                onClick={() => handleLanguageSelect(lang.code)}
                 className={`w-full text-left px-4 py-2 flex items-center gap-2 transition-colors ${language === lang.code ? 'bg-brand/20 text-primary' : 'hover:bg-secondary/10'}`}
                 whileHover={{ backgroundColor: language === lang.code ? 'rgba(var(--color-brand), 0.2)' : 'rgba(var(--color-secondary), 0.1)' }}
                 whileTap={{ scale: 0.98 }}
