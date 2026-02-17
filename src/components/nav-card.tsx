@@ -23,36 +23,37 @@ import { cn } from '@/lib/utils'
 import { useSize } from '@/hooks/use-size'
 import { useConfigStore } from '@/app/(home)/stores/config-store'
 import { HomeDraggableLayer } from '@/app/(home)/home-draggable-layer'
+import { useLanguage } from '@/i18n/context'
 
 const list = [
 	{
 		icon: ScrollOutlineSVG,
 		iconActive: ScrollFilledSVG,
-		label: '近期文章',
+		key: 'nav.blog',
 		href: '/blog'
 	},
 	{
 		icon: ProjectsOutlineSVG,
 		iconActive: ProjectsFilledSVG,
-		label: '我的项目',
+		key: 'nav.projects',
 		href: '/projects'
 	},
 	{
 		icon: AboutOutlineSVG,
 		iconActive: AboutFilledSVG,
-		label: '关于网站',
+		key: 'nav.about',
 		href: '/about'
 	},
 	{
 		icon: ShareOutlineSVG,
 		iconActive: ShareFilledSVG,
-		label: '推荐分享',
+		key: 'nav.share',
 		href: '/share'
 	},
 	{
 		icon: WebsiteOutlineSVG,
 		iconActive: WebsiteFilledSVG,
-		label: '优秀博客',
+		key: 'nav.bloggers',
 		href: '/bloggers'
 	}
 ]
@@ -66,6 +67,7 @@ export default function NavCard() {
 	const { maxSM } = useSize()
 	const [hoveredIndex, setHoveredIndex] = useState<number>(0)
 	const { siteContent, cardStyles } = useConfigStore()
+	const { t } = useLanguage()
 	const styles = cardStyles.navCard
 	const hiCardStyles = cardStyles.hiCard
 
@@ -172,17 +174,17 @@ export default function NavCard() {
 								/>
 
 								{list.map((item, index) => (
-									<Link
-										key={item.href}
-										href={item.href}
-										className={cn('text-secondary text-md relative z-10 flex items-center gap-3 rounded-full px-5 py-3', form === 'icons' && 'p-0')}
-										onMouseEnter={() => setHoveredIndex(index)}>
-										<div className='flex h-7 w-7 items-center justify-center'>
-											{hoveredIndex == index ? <item.iconActive className='text-brand absolute h-7 w-7' /> : <item.icon className='absolute h-7 w-7' />}
-										</div>
-										{form !== 'icons' && <span className={clsx(index == hoveredIndex && 'text-primary font-medium')}>{item.label}</span>}
-									</Link>
-								))}
+							<Link
+								key={item.href}
+								href={item.href}
+								className={cn('text-secondary text-md relative z-10 flex items-center gap-3 rounded-full px-5 py-3', form === 'icons' && 'p-0')}
+								onMouseEnter={() => setHoveredIndex(index)}>
+								<div className='flex h-7 w-7 items-center justify-center'>
+									{hoveredIndex == index ? <item.iconActive className='text-brand absolute h-7 w-7' /> : <item.icon className='absolute h-7 w-7' />}
+								</div>
+								{form !== 'icons' && <span className={clsx(index == hoveredIndex && 'text-primary font-medium')}>{t(item.key)}</span>}
+							</Link>
+						))}
 							</div>
 						</>
 					)}

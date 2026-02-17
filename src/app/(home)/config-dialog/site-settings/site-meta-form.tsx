@@ -1,6 +1,7 @@
 'use client'
 
 import type { SiteContent } from '../../stores/config-store'
+import { useLanguage } from '@/i18n/context'
 
 interface SiteMetaFormProps {
 	formData: SiteContent
@@ -8,11 +9,13 @@ interface SiteMetaFormProps {
 }
 
 export function SiteMetaForm({ formData, setFormData }: SiteMetaFormProps) {
+	const { t } = useLanguage()
+
 	return (
 		<>
 			<div className='grid grid-cols-2 gap-2'>
 				<div>
-					<label className='mb-2 block text-sm font-medium'>站点标题</label>
+					<label className='mb-2 block text-sm font-medium'>{t('siteSettings.siteMeta.title')}</label>
 					<input
 						type='text'
 						value={formData.meta.title}
@@ -22,7 +25,7 @@ export function SiteMetaForm({ formData, setFormData }: SiteMetaFormProps) {
 				</div>
 
 				<div>
-					<label className='mb-2 block text-sm font-medium'>用户名</label>
+					<label className='mb-2 block text-sm font-medium'>{t('siteSettings.siteMeta.username')}</label>
 					<input
 						type='text'
 						value={formData.meta.username || ''}
@@ -33,7 +36,7 @@ export function SiteMetaForm({ formData, setFormData }: SiteMetaFormProps) {
 			</div>
 
 			<div>
-				<label className='mb-2 block text-sm font-medium'>站点描述</label>
+				<label className='mb-2 block text-sm font-medium'>{t('siteSettings.siteMeta.description')}</label>
 				<textarea
 					value={formData.meta.description}
 					onChange={e => setFormData({ ...formData, meta: { ...formData.meta, description: e.target.value } })}

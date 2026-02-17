@@ -5,6 +5,7 @@ import { toast } from 'sonner'
 import { hashFileSHA256 } from '@/lib/file-utils'
 import type { SiteContent } from '../../stores/config-store'
 import type { BackgroundImageUploads, FileItem } from './types'
+import { useLanguage } from '@/i18n/context'
 
 interface BackgroundImagesSectionProps {
 	formData: SiteContent
@@ -16,6 +17,7 @@ interface BackgroundImagesSectionProps {
 export function BackgroundImagesSection({ formData, setFormData, backgroundImageUploads, setBackgroundImageUploads }: BackgroundImagesSectionProps) {
 	const backgroundInputRef = useRef<HTMLInputElement>(null)
 	const [backgroundUrlInput, setBackgroundUrlInput] = useState('')
+	const { t } = useLanguage()
 
 	const handleBackgroundFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0]
@@ -54,7 +56,7 @@ export function BackgroundImagesSection({ formData, setFormData, backgroundImage
 
 	const handleBackgroundUrlSubmit = () => {
 		if (!backgroundUrlInput.trim()) {
-			toast.error('请输入图片 URL')
+			toast.error(t('siteSettings.backgroundImages.pleaseEnterUrl'))
 			return
 		}
 
@@ -113,14 +115,14 @@ export function BackgroundImagesSection({ formData, setFormData, backgroundImage
 	return (
 		<div>
 			<div className='mb-2 flex items-center justify-between'>
-				<label className='block text-sm font-medium'>背景图片</label>
+				<label className='block text-sm font-medium'>{t('siteSettings.backgroundImages.title')}</label>
 				{formData.currentBackgroundImageId && formData.currentBackgroundImageId.trim() && (
 					<button
 						type='button'
 						onClick={handleClearBackgroundImage}
 						className='text-secondary rounded-lg border bg-white/60 px-3 py-1 text-xs font-medium hover:bg-white/80'>
-						取消设置
-					</button>
+						{t('siteSettings.backgroundImages.cancel')}
+									</button>
 				)}
 			</div>
 			{formData.currentBackgroundImageId && formData.currentBackgroundImageId.trim() && (
@@ -131,7 +133,7 @@ export function BackgroundImagesSection({ formData, setFormData, backgroundImage
 						onChange={(e) => setFormData(prev => ({ ...prev, enableBackgroundBlur: e.target.checked }))}
 						className='h-4 w-4 rounded border-gray-300 text-brand focus:ring-brand'
 					/>
-					<label className='text-secondary text-xs'>启用毛玻璃效果</label>
+					<label className='text-secondary text-xs'>{t('siteSettings.backgroundImages.enableBlur')}</label>
 				</div>
 			)}
 			<input ref={backgroundInputRef} type='file' accept='image/*' className='hidden' onChange={handleBackgroundFileSelect} />
@@ -155,14 +157,14 @@ export function BackgroundImagesSection({ formData, setFormData, backgroundImage
 									<img src={src} alt='background preview' className='h-24 w-full object-cover' />
 								</button>
 								{isActive && (
-									<span className='bg-brand pointer-events-none absolute top-1 left-1 rounded-full px-2 py-0.5 text-[10px] text-white shadow'>当前使用</span>
+									<span className='bg-brand pointer-events-none absolute top-1 left-1 rounded-full px-2 py-0.5 text-[10px] text-white shadow'>{t('siteSettings.artImages.current')}</span>
 								)}
 								<button
 									type='button'
 									onClick={() => handleRemoveBackgroundImage(item.id)}
 									className='text-secondary absolute top-1 right-1 hidden rounded-full bg-white/90 px-1.5 py-0.5 text-[10px] shadow group-hover:block'>
-									删除
-								</button>
+									{t('siteSettings.artImages.delete')}
+												</button>
 							</div>
 						)
 					})}
@@ -186,12 +188,12 @@ export function BackgroundImagesSection({ formData, setFormData, backgroundImage
 							handleBackgroundUrlSubmit()
 						}
 					}}
-					placeholder='输入图片 URL'
+					placeholder={t('siteSettings.backgroundImages.urlPlaceholder')}
 					className='bg-secondary/10 flex-1 rounded-lg border px-3 py-1.5 text-xs'
 				/>
 				<button type='button' onClick={handleBackgroundUrlSubmit} className='bg-card rounded-lg border px-3 py-1.5 text-xs font-medium'>
-					添加 URL
-				</button>
+					{t('siteSettings.backgroundImages.addUrl')}
+						</button>
 			</div>
 		</div>
 	)

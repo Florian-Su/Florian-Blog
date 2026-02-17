@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { motion } from 'motion/react'
 import { Play, Pause, RotateCcw } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useLanguage } from '@/i18n/context'
 
 type TimerMode = 'stopwatch' | 'timer'
 
@@ -20,6 +21,7 @@ export default function ClockPage() {
 	const initialTimerTimeRef = useRef<number>(0)
 	const stopwatchTimeRef = useRef<number>(0)
 	const timerTimeRef = useRef<number>(0)
+	const { t } = useLanguage()
 
 	// Sync refs with state
 	stopwatchTimeRef.current = stopwatchTime
@@ -153,7 +155,7 @@ export default function ClockPage() {
 							`flex-1 rounded-xl px-4 py-3 text-sm font-medium transition-all`,
 							mode === 'stopwatch' ? 'bg-brand text-white shadow-sm' : 'text-secondary hover:text-brand'
 						)}>
-						秒表
+						{t('clock.stopwatch')}
 					</motion.button>
 					<motion.button
 						whileHover={{ scale: 1.02 }}
@@ -171,7 +173,7 @@ export default function ClockPage() {
 							`flex-1 rounded-xl px-4 py-3 text-sm font-medium transition-all`,
 							mode === 'timer' ? 'bg-brand text-white shadow-sm' : 'text-secondary hover:text-brand'
 						)}>
-						计时器
+						{t('clock.timer')}
 					</motion.button>
 				</div>
 
@@ -233,7 +235,7 @@ export default function ClockPage() {
 							onClick={handleLap}
 							disabled={!isRunning}
 							className='flex h-16 w-16 items-center justify-center rounded-full border bg-white/60 text-sm font-medium backdrop-blur-sm transition-all hover:bg-white/80 disabled:cursor-not-allowed disabled:opacity-50'>
-							计次
+							{t('clock.lap')}
 						</motion.button>
 					)}
 					<motion.button

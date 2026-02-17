@@ -9,6 +9,8 @@ import type { FileItem, ArtImageUploads, SocialButtonImageUploads, BackgroundIma
 type ArtImageConfig = SiteContent['artImages'][number]
 type BackgroundImageConfig = SiteContent['backgroundImages'][number]
 
+type TranslateFunction = (key: string) => string;
+
 export async function pushSiteContent(
 	siteContent: SiteContent,
 	cardStyles: CardStyles,
@@ -18,23 +20,24 @@ export async function pushSiteContent(
 	removedArtImages?: ArtImageConfig[],
 	backgroundImageUploads?: BackgroundImageUploads,
 	removedBackgroundImages?: BackgroundImageConfig[],
-	socialButtonImageUploads?: SocialButtonImageUploads
+	socialButtonImageUploads?: SocialButtonImageUploads,
+	t?: TranslateFunction
 ): Promise<void> {
 	const token = await getAuthToken()
 
-	toast.info('正在获取分支信息...')
+	toast.info(t ? t('toast.gettingBranchInfo') : '正在获取分支信息...')
 	const refData = await getRef(token, GITHUB_CONFIG.OWNER, GITHUB_CONFIG.REPO, GITHUB_CONFIG.BRANCH)
 	const latestCommitSha = refData.sha
 
-	const commitMessage = `更新站点配置`
+	const commitMessage = t ? `Update site config` : `更新站点配置`
 
-	toast.info('正在准备文件...')
+	toast.info(t ? t('toast.preparingFiles') : '正在准备文件...')
 
 	const treeItems: TreeItem[] = []
 
 	// Handle favicon upload
 	if (faviconItem?.type === 'file') {
-		toast.info('正在上传 Favicon...')
+		toast.info(t ? t('toast.uploadingFavicon') : '正在上传 Favicon...')
 		const contentBase64 = await fileToBase64NoPrefix(faviconItem.file)
 		const blobData = await createBlob(token, GITHUB_CONFIG.OWNER, GITHUB_CONFIG.REPO, contentBase64, 'base64')
 		treeItems.push({
@@ -47,7 +50,7 @@ export async function pushSiteContent(
 
 	// Handle avatar upload
 	if (avatarItem?.type === 'file') {
-		toast.info('正在上传 Avatar...')
+		toast.info(t ? t('toast.uploadingAvatar') : '正在上传 Avatar...')
 		const contentBase64 = await fileToBase64NoPrefix(avatarItem.file)
 		const blobData = await createBlob(token, GITHUB_CONFIG.OWNER, GITHUB_CONFIG.REPO, contentBase64, 'base64')
 		treeItems.push({
@@ -71,7 +74,7 @@ export async function pushSiteContent(
 			const path = `public${normalizedUrlPath}`
 			if (!path) continue
 
-			toast.info(`正在上传 Art 图片 ${id}...`)
+			toast.info(t ? `${t('toast.uploadingArtImages')} ${id}...` : `正在上传 Art 图片 ${id}...`)
 			const contentBase64 = await fileToBase64NoPrefix(item.file)
 			const blobData = await createBlob(token, GITHUB_CONFIG.OWNER, GITHUB_CONFIG.REPO, contentBase64, 'base64')
 			treeItems.push({
@@ -112,7 +115,7 @@ export async function pushSiteContent(
 			const path = `public${normalizedUrlPath}`
 			if (!path) continue
 
-			toast.info(`正在上传背景图片 ${id}...`)
+			toast.info(t ? `${t('toast.uploadingBackgroundImages')} ${id}...` : `正在上传背景图片 ${id}...`)
 			const contentBase64 = await fileToBase64NoPrefix(item.file)
 			const blobData = await createBlob(token, GITHUB_CONFIG.OWNER, GITHUB_CONFIG.REPO, contentBase64, 'base64')
 			treeItems.push({
@@ -156,7 +159,7 @@ export async function pushSiteContent(
 			const path = `public${normalizedUrlPath}`
 			if (!path) continue
 
-			toast.info(`正在上传社交按钮图片 ${buttonId}...`)
+			toast.info(t ? `${t('toast.uploadingSocialButtonImages')} ${buttonId}...` : `正在上传社交按钮图片 ${buttonId}...`)
 			const contentBase64 = await fileToBase64NoPrefix(item.file)
 			const blobData = await createBlob(token, GITHUB_CONFIG.OWNER, GITHUB_CONFIG.REPO, contentBase64, 'base64')
 			treeItems.push({
@@ -188,14 +191,14 @@ export async function pushSiteContent(
 		sha: cardStylesBlob.sha
 	})
 
-	toast.info('正在创建文件树...')
+	toast.info(t ? t('toast.creatingTree') : '正在创建文件树...')
 	const treeData = await createTree(token, GITHUB_CONFIG.OWNER, GITHUB_CONFIG.REPO, treeItems, latestCommitSha)
 
-	toast.info('正在创建提交...')
+	toast.info(t ? t('toast.creatingCommit') : '正在创建提交...')
 	const commitData = await createCommit(token, GITHUB_CONFIG.OWNER, GITHUB_CONFIG.REPO, commitMessage, treeData.sha, [latestCommitSha])
 
-	toast.info('正在更新分支...')
+	toast.info(t ? t('toast.updatingBranch') : '正在更新分支...')
 	await updateRef(token, GITHUB_CONFIG.OWNER, GITHUB_CONFIG.REPO, GITHUB_CONFIG.BRANCH, commitData.sha)
 
-	toast.success('保存成功！')
+	toast.success(t ? t('toast.saveSuccess') : '保存成功！')
 }

@@ -9,6 +9,7 @@ import { useAuthStore } from '@/hooks/use-auth'
 import { useConfigStore } from '@/app/(home)/stores/config-store'
 import initialList from './list.json'
 import { pushSnippets } from './services/push-snippets'
+import { useLanguage } from '@/i18n/context'
 
 const getRandomSnippet = (list: string[]) => (list.length === 0 ? '' : list[Math.floor(Math.random() * list.length)])
 
@@ -26,6 +27,7 @@ export default function Page() {
 	const { isAuth, setPrivateKey } = useAuthStore()
 	const { siteContent } = useConfigStore()
 	const hideEditButton = siteContent.hideEditButton ?? false
+	const { t } = useLanguage()
 
 	useEffect(() => {
 		const handleKeyDown = (e: KeyboardEvent) => {
@@ -47,10 +49,10 @@ export default function Page() {
 			await pushSnippets({ snippets })
 			setOriginalSnippets(snippets)
 			setIsEditMode(false)
-			toast.success('保存成功！')
+			toast.success(t('toast.saveSuccess'))
 		} catch (error: any) {
 			console.error('Failed to save snippets:', error)
-			toast.error(`保存失败: ${error?.message || '未知错误'}`)
+			toast.error(`${t('toast.saveFailed')}: ${error?.message || t('toast.error')}`)
 		} finally {
 			setIsSaving(false)
 		}
@@ -76,7 +78,7 @@ export default function Page() {
 			await handleSave()
 		} catch (error) {
 			console.error('Failed to read private key:', error)
-			toast.error('读取密钥文件失败')
+			toast.error(t('toast.readKeyFileError'))
 		}
 	}
 
@@ -89,7 +91,7 @@ export default function Page() {
 	const handleAddDraft = () => {
 		const value = newSnippet.trim()
 		if (!value) {
-			toast.error('请输入句子')
+			toast.error(t('snippets.enterSentence'))
 			return
 		}
 		setDraftSnippets(prev => [...prev, value])
@@ -103,12 +105,12 @@ export default function Page() {
 	const applyManageChanges = () => {
 		const cleaned = draftSnippets.map(item => item.trim()).filter(Boolean)
 		if (cleaned.length === 0) {
-			toast.error('请至少添加一句话')
+			toast.error(t('snippets.addAtLeastOneSentence'))
 			return
 		}
 		setSnippets(cleaned)
 		setIsManageOpen(false)
-		toast.success('已更新列表')
+		toast.success(t('toast.updateSuccess'))
 	}
 
 	const cancelManageChanges = () => {
@@ -117,7 +119,7 @@ export default function Page() {
 		setNewSnippet('')
 	}
 
-	const buttonText = isAuth ? '保存' : '导入密钥'
+	const buttonText = isAuth ? t('toast.saveSuccess') : t('config.importKey')
 
 	return (
 		<>
@@ -143,33 +145,33 @@ export default function Page() {
 				{isEditMode ? (
 					<>
 						<motion.button
-							whileHover={{ scale: 1.05 }}
-							whileTap={{ scale: 0.95 }}
-							onClick={handleCancel}
-							disabled={isSaving}
-							className='rounded-xl border bg-white/60 px-6 py-2 text-sm'>
-							取消
-						</motion.button>
-						<motion.button
-							whileHover={{ scale: 1.05 }}
-							whileTap={{ scale: 0.95 }}
-							onClick={openManageDialog}
-							className='rounded-xl border bg-white/60 px-6 py-2 text-sm'>
-							管理
-						</motion.button>
-						<motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={handleSaveClick} disabled={isSaving} className='brand-btn px-6'>
-							{isSaving ? '保存中...' : buttonText}
-						</motion.button>
+					whileHover={{ scale: 1.05 }}
+					whileTap={{ scale: 0.95 }}
+					onClick={handleCancel}
+					disabled={isSaving}
+					className='rounded-xl border bg-white/60 px-6 py-2 text-sm'>
+					{t('config.cancel')}
+				</motion.button>
+				<motion.button
+					whileHover={{ scale: 1.05 }}
+					whileTap={{ scale: 0.95 }}
+					onClick={openManageDialog}
+					className='rounded-xl border bg-white/60 px-6 py-2 text-sm'>
+					{t('snippets.manage')}
+				</motion.button>
+				<motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={handleSaveClick} disabled={isSaving} className='brand-btn px-6'>
+					{isSaving ? t('config.saving') : buttonText}
+				</motion.button>
 					</>
 				) : (
 					!hideEditButton && (
 						<motion.button
-							whileHover={{ scale: 1.05 }}
-							whileTap={{ scale: 0.95 }}
-							onClick={() => setIsEditMode(true)}
-							className='bg-card rounded-xl border px-6 py-2 text-sm backdrop-blur-sm transition-colors hover:bg-white/80'>
-							编辑
-						</motion.button>
+						whileHover={{ scale: 1.05 }}
+						whileTap={{ scale: 0.95 }}
+						onClick={() => setIsEditMode(true)}
+						className='bg-card rounded-xl border px-6 py-2 text-sm backdrop-blur-sm transition-colors hover:bg-white/80'>
+						{t('about.edit')}
+					</motion.button>
 					)
 				)}
 			</motion.div>
@@ -178,20 +180,20 @@ export default function Page() {
 				<div className='space-y-4'>
 					<div className='flex items-center gap-3'>
 						<input
-							type='text'
-							value={newSnippet}
-							onChange={e => setNewSnippet(e.target.value)}
-							placeholder='新增'
-							className='flex-1 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:outline-none'
-						/>
-						<button onClick={handleAddDraft} className='brand-btn flex items-center gap-1 px-4 py-2 text-sm'>
-							<Plus className='h-4 w-4' />
-							新增
-						</button>
+					type='text'
+					value={newSnippet}
+					onChange={e => setNewSnippet(e.target.value)}
+					placeholder={t('snippets.addNew')}
+					className='flex-1 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:outline-none'
+				/>
+				<button onClick={handleAddDraft} className='brand-btn flex items-center gap-1 px-4 py-2 text-sm'>
+					<Plus className='h-4 w-4' />
+					{t('snippets.add')}
+				</button>
 					</div>
 
 					<div className='max-h-[320px] space-y-2 overflow-y-auto pr-1'>
-						{draftSnippets.length === 0 && <p className='text-secondary py-6 text-center text-sm'>暂无内容</p>}
+						{draftSnippets.length === 0 && <p className='text-secondary py-6 text-center text-sm'>{t('snippets.noContent')}</p>}
 						{draftSnippets.map((item, index) => (
 							<div key={`${item}-${index}`} className='group flex items-start gap-3 rounded-lg px-3 py-2 text-sm'>
 								<p className='flex-1 leading-relaxed text-gray-800'>{item}</p>
@@ -203,15 +205,15 @@ export default function Page() {
 					</div>
 
 					<div className='mt-4 flex gap-3'>
-						<button
-							onClick={cancelManageChanges}
-							className='flex-1 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm transition-colors hover:bg-gray-50'>
-							取消
-						</button>
-						<button onClick={applyManageChanges} className='brand-btn flex-1 justify-center px-4'>
-							保存
-						</button>
-					</div>
+					<button
+						onClick={cancelManageChanges}
+						className='flex-1 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm transition-colors hover:bg-gray-50'>
+						{t('config.cancel')}
+					</button>
+					<button onClick={applyManageChanges} className='brand-btn flex-1 justify-center px-4'>
+						{t('toast.saveSuccess')}
+					</button>
+				</div>
 				</div>
 			</DialogModal>
 		</>

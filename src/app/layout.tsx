@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import Layout from '@/layout'
 import Head from '@/layout/head'
 import siteContent from '@/config/site-content.json'
+import { LanguageProvider } from '@/i18n/context'
 
 const {
 	meta: { title, description },
@@ -47,11 +48,13 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
 					if (/windows|win32/i.test(navigator.userAgent)) {
 						document.documentElement.classList.add('windows');
 					}
-		      `
+			      `
 					}}
 				/>
 
-				<Layout>{children}</Layout>
+				<LanguageProvider>
+					<Layout>{children}</Layout>
+				</LanguageProvider>
 			</body>
 		</html>
 	)

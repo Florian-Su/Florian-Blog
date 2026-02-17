@@ -5,6 +5,7 @@ import { toast } from 'sonner'
 import { hashFileSHA256 } from '@/lib/file-utils'
 import type { SiteContent } from '../../stores/config-store'
 import type { ArtImageUploads, FileItem } from './types'
+import { useLanguage } from '@/i18n/context'
 
 interface ArtImagesSectionProps {
 	formData: SiteContent
@@ -16,6 +17,7 @@ interface ArtImagesSectionProps {
 export function ArtImagesSection({ formData, setFormData, artImageUploads, setArtImageUploads }: ArtImagesSectionProps) {
 	const artInputRef = useRef<HTMLInputElement>(null)
 	const [artUrlInput, setArtUrlInput] = useState('')
+	const { t } = useLanguage()
 
 	const handleArtFilesSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const files = Array.from(e.target.files || [])
@@ -56,7 +58,7 @@ export function ArtImagesSection({ formData, setFormData, artImageUploads, setAr
 
 	const handleArtUrlSubmit = () => {
 		if (!artUrlInput.trim()) {
-			toast.error('请输入图片 URL')
+			toast.error(t('siteSettings.artImages.pleaseEnterUrl'))
 			return
 		}
 
@@ -107,9 +109,9 @@ export function ArtImagesSection({ formData, setFormData, artImageUploads, setAr
 
 	return (
 		<div>
-			<label className='mb-2 block text-sm font-medium'>首页图片</label>
+			<label className='mb-2 block text-sm font-medium'>{t('siteSettings.artImages.title')}</label>
 			<input ref={artInputRef} type='file' accept='image/*' multiple className='hidden' onChange={handleArtFilesSelect} />
-			{(formData.artImages?.length ?? 0) === 0 && <p className='mb-2 text-xs text-gray-500'>暂未配置 Art 图片，点击下方「+」添加。</p>}
+			{(formData.artImages?.length ?? 0) === 0 && <p className='mb-2 text-xs text-gray-500'>{t('siteSettings.artImages.noImages')}</p>}
 			<div className='grid grid-cols-4 gap-3 max-sm:grid-cols-3'>
 				{formData.artImages?.map(item => {
 					const isActive = formData.currentArtImageId === item.id
@@ -127,14 +129,14 @@ export function ArtImagesSection({ formData, setFormData, artImageUploads, setAr
 								<img src={src} alt='art preview' className='h-24 w-full object-cover' />
 							</button>
 							{isActive && (
-								<span className='bg-brand pointer-events-none absolute top-1 left-1 rounded-full px-2 py-0.5 text-[10px] text-white shadow'>当前使用</span>
+								<span className='bg-brand pointer-events-none absolute top-1 left-1 rounded-full px-2 py-0.5 text-[10px] text-white shadow'>{t('siteSettings.artImages.current')}</span>
 							)}
 							<button
 								type='button'
 								onClick={() => handleRemoveArtImage(item.id)}
 								className='text-secondary absolute top-1 right-1 hidden rounded-full bg-white/90 px-1.5 py-0.5 text-[10px] shadow group-hover:block'>
-								删除
-							</button>
+								{t('siteSettings.artImages.delete')}
+												</button>
 						</div>
 					)
 				})}
@@ -158,12 +160,12 @@ export function ArtImagesSection({ formData, setFormData, artImageUploads, setAr
 							handleArtUrlSubmit()
 						}
 					}}
-					placeholder='输入图片 URL'
+					placeholder={t('siteSettings.artImages.urlPlaceholder')}
 					className='bg-secondary/10 flex-1 rounded-lg border px-3 py-1.5 text-xs'
 				/>
 				<button type='button' onClick={handleArtUrlSubmit} className='bg-card rounded-lg border px-3 py-1.5 text-xs font-medium'>
-					添加 URL
-				</button>
+					{t('siteSettings.artImages.addUrl')}
+						</button>
 			</div>
 		</div>
 	)

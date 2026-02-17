@@ -5,10 +5,12 @@ import { pushBlog } from '../services/push-blog'
 import { deleteBlog } from '../services/delete-blog'
 import { useWriteStore } from '../stores/write-store'
 import { useAuthStore } from '@/hooks/use-auth'
+import { useLanguage } from '@/i18n/context'
 
 export function usePublish() {
 	const { loading, setLoading, form, cover, images, mode, originalSlug } = useWriteStore()
 	const { isAuth, setPrivateKey } = useAuthStore()
+	const { t } = useLanguage()
 
 	const onChoosePrivateKey = useCallback(
 		async (file: File) => {
@@ -29,15 +31,14 @@ export function usePublish() {
 				originalSlug
 			})
 
-			const successMsg = mode === 'edit' ? '更新成功' : '发布成功'
-			toast.success(successMsg)
+			toast.success(t('toast.publishSuccess'))
 		} catch (err: any) {
 			console.error(err)
-			toast.error(err?.message || '操作失败')
+			toast.error(err?.message || t('toast.error'))
 		} finally {
 			setLoading(false)
 		}
-	}, [form, cover, images, mode, originalSlug, setLoading])
+	}, [form, cover, images, mode, originalSlug, setLoading, t])
 
 	const onDelete = useCallback(async () => {
 		const targetSlug = originalSlug || form.slug
@@ -48,13 +49,14 @@ export function usePublish() {
 		try {
 			setLoading(true)
 			await deleteBlog(targetSlug)
+			toast.success(t('toast.deleteSuccess'))
 		} catch (err: any) {
 			console.error(err)
-			toast.error(err?.message || '删除失败')
+			toast.error(err?.message || t('toast.error'))
 		} finally {
 			setLoading(false)
 		}
-	}, [form.slug, originalSlug, setLoading])
+	}, [form.slug, originalSlug, setLoading, t])
 
 	return {
 		isAuth,

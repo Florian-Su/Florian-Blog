@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type DragEvent } fro
 import { motion } from 'motion/react'
 import { ANIMATION_DELAY, INIT_DELAY } from '@/consts'
 import { DialogModal } from '@/components/dialog-modal'
+import { useLanguage } from '@/i18n/context'
 
 type ConvertedMeta = {
 	url: string
@@ -86,6 +87,7 @@ export default function Page() {
 	const hasConverted = images.some(item => !!item.converted)
 	const imagesRef = useRef<SelectedImage[]>([])
 	const dragCounterRef = useRef(0)
+	const { t } = useLanguage()
 
 	useEffect(() => {
 		imagesRef.current = images
@@ -303,8 +305,8 @@ export default function Page() {
 					transition={{ delay: INIT_DELAY }}
 					className='space-y-2 text-center'>
 					<p className='text-secondary text-xs tracking-[0.2em] uppercase'>Image Toolbox</p>
-					<h1 className='text-2xl font-semibold'>PNG / JPG 转 WEBP</h1>
-					<p className='text-secondary'>选择图片 → 调整质量 → 一键转换下载</p>
+				<h1 className='text-2xl font-semibold'>{t('imageToolbox.title')}</h1>
+				<p className='text-secondary'>{t('imageToolbox.description')}</p>
 				</motion.div>
 
 				<motion.label
@@ -323,17 +325,17 @@ export default function Page() {
 						📷
 					</div>
 					<div>
-						<p className='text-base font-medium'>点击或拖拽图片</p>
-						<p className='text-secondary text-xs'>支持 PNG、JPG、JPEG、HEIC 等常见格式</p>
+						<p className='text-base font-medium'>{t('imageToolbox.clickOrDrag')}</p>
+						<p className='text-secondary text-xs'>{t('imageToolbox.supportedFormats')}</p>
 					</div>
 				</motion.label>
 
 				{hasImages && (
 					<motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className='card relative'>
 						<div className='text-secondary flex items-center justify-between border-b border-slate-200 pb-3 text-xs tracking-[0.2em] uppercase'>
-							<span>已选择 {images.length} 张图片</span>
-							<span>{totalSize}</span>
-						</div>
+								<span>{t('imageToolbox.selectedImages', { count: images.length })}</span>
+								<span>{totalSize}</span>
+							</div>
 						<ul className='divide-y divide-slate-200'>
 							{images.map((item, index) => {
 								const { file, preview, converted, converting } = item
@@ -351,30 +353,30 @@ export default function Page() {
 										</div>
 										<div className='flex flex-wrap justify-end gap-2 text-xs'>
 											<button
-												onClick={() => handleConvertImage(index)}
-												disabled={!!converting}
-												className='rounded-full px-3 py-1 font-medium transition disabled:cursor-not-allowed disabled:text-slate-300'>
-												{converting ? '转换中...' : converted ? '重新转换' : '转换'}
-											</button>
+											onClick={() => handleConvertImage(index)}
+											disabled={!!converting}
+											className='rounded-full px-3 py-1 font-medium transition disabled:cursor-not-allowed disabled:text-slate-300'>
+											{converting ? t('imageToolbox.converting') : converted ? t('imageToolbox.reconvert') : t('imageToolbox.convert')}
+										</button>
 											{converted ? (
 												<>
 													<button
-														onClick={() => handleCompareImage(index)}
-														className='border-brand text-brand hover:bg-brand/10 rounded-full border px-3 py-1 font-semibold transition'>
-														对比
-													</button>
-													<button
-														onClick={() => handleDownloadImage(index)}
-														className='border-brand text-brand hover:bg-brand/10 rounded-full border px-3 py-1 font-semibold transition'>
-														下载
-													</button>
+													onClick={() => handleCompareImage(index)}
+													className='border-brand text-brand hover:bg-brand/10 rounded-full border px-3 py-1 font-semibold transition'>
+													{t('imageToolbox.compare')}
+												</button>
+												<button
+													onClick={() => handleDownloadImage(index)}
+													className='border-brand text-brand hover:bg-brand/10 rounded-full border px-3 py-1 font-semibold transition'>
+													{t('imageToolbox.download')}
+												</button>
 												</>
 											) : null}
 											<button
-												onClick={() => handleRemoveImage(index)}
-												className='rounded-full border border-red-200 px-3 py-1 font-medium text-rose-400 transition hover:bg-rose-50'>
-												移除
-											</button>
+													onClick={() => handleRemoveImage(index)}
+													className='rounded-full border border-red-200 px-3 py-1 font-medium text-rose-400 transition hover:bg-rose-50'>
+													{t('imageToolbox.remove')}
+												</button>
 										</div>
 									</li>
 								)
@@ -440,13 +442,13 @@ export default function Page() {
 								onClick={handleConvertAll}
 								disabled={!hasConvertible || batchConverting}
 								className='rounded-full border border-slate-200 px-4 py-2 font-medium transition disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-300'>
-								{batchConverting ? '全部转换中…' : '全部转换'}
+								{batchConverting ? t('imageToolbox.batchConverting') : t('imageToolbox.convertAll')}
 							</button>
 							<button
 								onClick={handleDownloadAll}
 								disabled={!hasConverted}
 								className='border-brand text-brand rounded-full border px-4 py-2 font-semibold transition disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-300'>
-								全部下载
+								{t('imageToolbox.downloadAll')}
 							</button>
 						</div>
 					</div>

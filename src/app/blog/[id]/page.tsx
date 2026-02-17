@@ -8,12 +8,16 @@ import { BlogPreview } from '@/components/blog-preview'
 import { loadBlog, type BlogConfig } from '@/lib/load-blog'
 import { useReadArticles } from '@/hooks/use-read-articles'
 import LiquidGrass from '@/components/liquid-grass'
+import { useLanguage } from '@/i18n/context'
+
+const origin = typeof window !== 'undefined' ? window.location.origin : ''
 
 export default function Page() {
 	const params = useParams() as { id?: string | string[] }
 	const slug = Array.isArray(params?.id) ? params.id[0] : params?.id || ''
 	const router = useRouter()
 	const { markAsRead } = useReadArticles()
+	const { t } = useLanguage()
 
 	const [blog, setBlog] = useState<{ config: BlogConfig; markdown: string; cover?: string } | null>(null)
 	const [error, setError] = useState<string | null>(null)
@@ -53,11 +57,11 @@ export default function Page() {
 	}
 
 	if (!slug) {
-		return <div className='text-secondary flex h-full items-center justify-center text-sm'>无效的链接</div>
+		return <div className='text-secondary flex h-full items-center justify-center text-sm'>{t('blog.invalidLink')}</div>
 	}
 
 	if (loading) {
-		return <div className='text-secondary flex h-full items-center justify-center text-sm'>加载中...</div>
+		return <div className='text-secondary flex h-full items-center justify-center text-sm'>{t('blog.loading')}</div>
 	}
 
 	if (error) {
@@ -65,7 +69,7 @@ export default function Page() {
 	}
 
 	if (!blog) {
-		return <div className='text-secondary flex h-full items-center justify-center text-sm'>文章不存在</div>
+		return <div className='text-secondary flex h-full items-center justify-center text-sm'>{t('blog.articleNotFound')}</div>
 	}
 
 	return (
@@ -81,14 +85,14 @@ export default function Page() {
 			/>
 
 			<motion.button
-				initial={{ opacity: 0, scale: 0.6 }}
-				animate={{ opacity: 1, scale: 1 }}
-				whileHover={{ scale: 1.05 }}
-				whileTap={{ scale: 0.95 }}
-				onClick={handleEdit}
-				className='absolute top-4 right-6 rounded-xl border bg-white/60 px-6 py-2 text-sm backdrop-blur-sm transition-colors hover:bg-white/80 max-sm:hidden'>
-				编辑
-			</motion.button>
+			initial={{ opacity: 0, scale: 0.6 }}
+			animate={{ opacity: 1, scale: 1 }}
+			whileHover={{ scale: 1.05 }}
+			whileTap={{ scale: 0.95 }}
+			onClick={handleEdit}
+			className='absolute top-4 right-6 rounded-xl border bg-white/60 px-6 py-2 text-sm backdrop-blur-sm transition-colors hover:bg-white/80 max-sm:hidden'>
+			{t('about.edit')}
+		</motion.button>
 
 			{slug === 'liquid-grass' && <LiquidGrass />}
 		</>

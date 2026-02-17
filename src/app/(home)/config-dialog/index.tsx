@@ -11,6 +11,7 @@ import type { SiteContent, CardStyles } from '../stores/config-store'
 import { SiteSettings, type FileItem, type ArtImageUploads, type BackgroundImageUploads, type SocialButtonImageUploads } from './site-settings'
 import { ColorConfig } from './color-config'
 import { HomeLayout } from './home-layout'
+import { useLanguage } from '@/i18n/context'
 
 interface ConfigDialogProps {
 	open: boolean
@@ -22,6 +23,7 @@ type TabType = 'site' | 'color' | 'layout'
 export default function ConfigDialog({ open, onClose }: ConfigDialogProps) {
 	const { isAuth, setPrivateKey } = useAuthStore()
 	const { siteContent, setSiteContent, cardStyles, setCardStyles, regenerateBubbles } = useConfigStore()
+	const { t } = useLanguage()
 	const [formData, setFormData] = useState<SiteContent>(siteContent)
 	const [cardStylesData, setCardStylesData] = useState<CardStyles>(cardStyles)
 	const [originalData, setOriginalData] = useState<SiteContent>(siteContent)
@@ -86,7 +88,7 @@ export default function ConfigDialog({ open, onClose }: ConfigDialogProps) {
 			await handleSave()
 		} catch (error) {
 			console.error('Failed to read private key:', error)
-			toast.error('读取密钥文件失败')
+			toast.error(t('toast.readKeyFileError'))
 		}
 	}
 
@@ -120,7 +122,8 @@ export default function ConfigDialog({ open, onClose }: ConfigDialogProps) {
 				removedArtImages,
 				backgroundImageUploads,
 				removedBackgroundImages,
-				socialButtonImageUploads
+				socialButtonImageUploads,
+				t
 			)
 			setSiteContent(formData)
 			setCardStyles(cardStylesData)
@@ -133,7 +136,7 @@ export default function ConfigDialog({ open, onClose }: ConfigDialogProps) {
 			onClose()
 		} catch (error: any) {
 			console.error('Failed to save:', error)
-			toast.error(`保存失败: ${error?.message || '未知错误'}`)
+			toast.error(`${t('toast.saveFailed')}: ${error?.message || t('toast.error')}`)
 		} finally {
 			setIsSaving(false)
 		}
@@ -219,12 +222,12 @@ export default function ConfigDialog({ open, onClose }: ConfigDialogProps) {
 		onClose()
 	}
 
-	const buttonText = isAuth ? '保存' : '导入密钥'
+	const buttonText = isAuth ? t('toast.saveSuccess') : t('config.importKey')
 
 	const tabs: { id: TabType; label: string }[] = [
-		{ id: 'site', label: '网站设置' },
-		{ id: 'color', label: '色彩配置' },
-		{ id: 'layout', label: '首页布局' }
+		{ id: 'site', label: t('config.siteSettings') },
+		{ id: 'color', label: t('config.colorConfig') },
+		{ id: 'layout', label: t('config.homeLayout') }
 	]
 
 	return (
@@ -258,23 +261,23 @@ export default function ConfigDialog({ open, onClose }: ConfigDialogProps) {
 					</div>
 					<div className='flex gap-3'>
 						<motion.button
-							whileHover={{ scale: 1.05 }}
-							whileTap={{ scale: 0.95 }}
-							onClick={handlePreview}
-							className='bg-card rounded-xl border px-6 py-2 text-sm'>
-							预览
-						</motion.button>
-						<motion.button
-							whileHover={{ scale: 1.05 }}
-							whileTap={{ scale: 0.95 }}
-							onClick={handleCancel}
-							disabled={isSaving}
-							className='bg-card rounded-xl border px-6 py-2 text-sm'>
-							取消
-						</motion.button>
-						<motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={handleSaveClick} disabled={isSaving} className='brand-btn px-6'>
-							{isSaving ? '保存中...' : buttonText}
-						</motion.button>
+								whileHover={{ scale: 1.05 }}
+								whileTap={{ scale: 0.95 }}
+								onClick={handlePreview}
+								className='bg-card rounded-xl border px-6 py-2 text-sm'>
+								{t('config.preview')}
+							</motion.button>
+							<motion.button
+								whileHover={{ scale: 1.05 }}
+								whileTap={{ scale: 0.95 }}
+								onClick={handleCancel}
+								disabled={isSaving}
+								className='bg-card rounded-xl border px-6 py-2 text-sm'>
+								{t('config.cancel')}
+							</motion.button>
+							<motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={handleSaveClick} disabled={isSaving} className='brand-btn px-6'>
+								{isSaving ? t('config.saving') : buttonText}
+							</motion.button>
 					</div>
 				</div>
 

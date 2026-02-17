@@ -10,6 +10,7 @@ import { useAuthStore } from '@/hooks/use-auth'
 import { useConfigStore } from '@/app/(home)/stores/config-store'
 import initialList from './list.json'
 import type { AvatarItem } from './components/avatar-upload-dialog'
+import { useLanguage } from '@/i18n/context'
 
 export default function Page() {
 	const [bloggers, setBloggers] = useState<Blogger[]>(initialList as Blogger[])
@@ -24,6 +25,7 @@ export default function Page() {
 	const { isAuth, setPrivateKey } = useAuthStore()
 	const { siteContent } = useConfigStore()
 	const hideEditButton = siteContent.hideEditButton ?? false
+	const { t } = useLanguage()
 
 	const handleUpdate = (updatedBlogger: Blogger, oldBlogger: Blogger, avatarItem?: AvatarItem) => {
 		setBloggers(prev => prev.map(b => (b.url === oldBlogger.url ? updatedBlogger : b)))
@@ -51,7 +53,7 @@ export default function Page() {
 	}
 
 	const handleDelete = (blogger: Blogger) => {
-		if (confirm(`确定要删除 ${blogger.name} 吗？`)) {
+		if (confirm(`${t('bloggers.confirmDelete', { name: blogger.name })}`)) {
 			setBloggers(bloggers.filter(b => b.url !== blogger.url))
 		}
 	}
@@ -64,7 +66,7 @@ export default function Page() {
 			await handleSave()
 		} catch (error) {
 			console.error('Failed to read private key:', error)
-			toast.error('读取密钥文件失败')
+			toast.error(t('toast.readKeyFileError'))
 		}
 	}
 
@@ -88,10 +90,10 @@ export default function Page() {
 			setOriginalBloggers(bloggers)
 			setAvatarItems(new Map())
 			setIsEditMode(false)
-			toast.success('保存成功！')
+			toast.success(t('toast.saveSuccess'))
 		} catch (error: any) {
 			console.error('Failed to save:', error)
-			toast.error(`保存失败: ${error?.message || '未知错误'}`)
+			toast.error(`${t('toast.saveFailed')}: ${error?.message || t('toast.error')}`)
 		} finally {
 			setIsSaving(false)
 		}
@@ -103,7 +105,7 @@ export default function Page() {
 		setIsEditMode(false)
 	}
 
-	const buttonText = isAuth ? '保存' : '导入密钥'
+	const buttonText = isAuth ? t('toast.saveSuccess') : t('config.importKey')
 
 	useEffect(() => {
 		const handleKeyDown = (e: KeyboardEvent) => {
@@ -139,33 +141,33 @@ export default function Page() {
 				{isEditMode ? (
 					<>
 						<motion.button
-							whileHover={{ scale: 1.05 }}
-							whileTap={{ scale: 0.95 }}
-							onClick={handleCancel}
-							disabled={isSaving}
-							className='rounded-xl border bg-white/60 px-6 py-2 text-sm'>
-							取消
-						</motion.button>
-						<motion.button
-							whileHover={{ scale: 1.05 }}
-							whileTap={{ scale: 0.95 }}
-							onClick={handleAdd}
-							className='rounded-xl border bg-white/60 px-6 py-2 text-sm'>
-							添加
-						</motion.button>
-						<motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={handleSaveClick} disabled={isSaving} className='brand-btn px-6'>
-							{isSaving ? '保存中...' : buttonText}
-						</motion.button>
+					whileHover={{ scale: 1.05 }}
+					whileTap={{ scale: 0.95 }}
+					onClick={handleCancel}
+					disabled={isSaving}
+					className='rounded-xl border bg-white/60 px-6 py-2 text-sm'>
+					{t('config.cancel')}
+				</motion.button>
+				<motion.button
+					whileHover={{ scale: 1.05 }}
+					whileTap={{ scale: 0.95 }}
+					onClick={handleAdd}
+					className='rounded-xl border bg-white/60 px-6 py-2 text-sm'>
+					{t('bloggers.add')}
+				</motion.button>
+				<motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={handleSaveClick} disabled={isSaving} className='brand-btn px-6'>
+					{isSaving ? t('config.saving') : buttonText}
+				</motion.button>
 					</>
 				) : (
 					!hideEditButton && (
 						<motion.button
-							whileHover={{ scale: 1.05 }}
-							whileTap={{ scale: 0.95 }}
-							onClick={() => setIsEditMode(true)}
-							className='bg-card rounded-xl border px-6 py-2 text-sm backdrop-blur-sm transition-colors hover:bg-white/80'>
-							编辑
-						</motion.button>
+						whileHover={{ scale: 1.05 }}
+						whileTap={{ scale: 0.95 }}
+						onClick={() => setIsEditMode(true)}
+						className='bg-card rounded-xl border px-6 py-2 text-sm backdrop-blur-sm transition-colors hover:bg-white/80'>
+						{t('about.edit')}
+					</motion.button>
 					)
 				)}
 			</motion.div>

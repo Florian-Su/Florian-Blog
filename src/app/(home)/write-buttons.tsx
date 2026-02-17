@@ -8,6 +8,8 @@ import { useRouter } from 'next/navigation'
 import { useSize } from '@/hooks/use-size'
 import DotsSVG from '@/svgs/dots.svg'
 import { HomeDraggableLayer } from './home-draggable-layer'
+import LanguageSelector from '@/components/language-selector'
+import { useLanguage } from '@/i18n/context'
 
 export default function WriteButton() {
 	const center = useCenterStore()
@@ -17,6 +19,7 @@ export default function WriteButton() {
 	const styles = cardStyles.writeButtons
 	const hiCardStyles = cardStyles.hiCard
 	const clockCardStyles = cardStyles.clockCard
+	const { t } = useLanguage()
 
 	const [show, setShow] = useState(false)
 
@@ -34,6 +37,7 @@ export default function WriteButton() {
 	return (
 		<HomeDraggableLayer cardKey='writeButtons' x={x} y={y} width={styles.width} height={styles.height}>
 			<motion.div initial={{ left: x, top: y }} animate={{ left: x, top: y }} className='absolute flex items-center gap-4'>
+				<LanguageSelector />
 				<motion.button
 					onClick={() => router.push('/write')}
 					initial={{ opacity: 0, scale: 0.6 }}
@@ -54,7 +58,7 @@ export default function WriteButton() {
 					)}
 
 					<PenSVG />
-					<span>写文章</span>
+					<span>{t('write')}</span>
 				</motion.button>
 				<motion.button
 					initial={{ opacity: 0, scale: 0.6 }}

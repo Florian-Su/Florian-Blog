@@ -19,6 +19,7 @@ import { toast } from 'sonner'
 import ConfigDialog from './config-dialog/index'
 import { useEffect } from 'react'
 import SnowfallBackground from '@/layout/backgrounds/snowfall'
+import { useLanguage } from '@/i18n/context'
 
 export default function Home() {
 	const { maxSM } = useSize()
@@ -26,15 +27,16 @@ export default function Home() {
 	const editing = useLayoutEditStore(state => state.editing)
 	const saveEditing = useLayoutEditStore(state => state.saveEditing)
 	const cancelEditing = useLayoutEditStore(state => state.cancelEditing)
+	const { t } = useLanguage()
 
 	const handleSave = () => {
 		saveEditing()
-		toast.success('首页布局偏移已保存（尚未提交到远程配置）')
+		toast.success(t('home.layoutSaved'))
 	}
 
 	const handleCancel = () => {
 		cancelEditing()
-		toast.info('已取消此次拖拽布局修改')
+		toast.info(t('home.layoutEditCanceled'))
 	}
 
 	useEffect(() => {
@@ -58,7 +60,7 @@ export default function Home() {
 			{editing && (
 				<div className='pointer-events-none fixed inset-x-0 top-0 z-50 flex justify-center pt-6'>
 					<div className='pointer-events-auto flex items-center gap-3 rounded-2xl bg-white/80 px-4 py-2 shadow-lg backdrop-blur'>
-						<span className='text-xs text-gray-600'>正在编辑首页布局，拖拽卡片调整位置</span>
+						<span className='text-xs text-gray-600'>{t('home.editingLayout')}</span>
 						<div className='flex gap-2'>
 							<motion.button
 								type='button'
@@ -66,10 +68,10 @@ export default function Home() {
 								whileTap={{ scale: 0.95 }}
 								onClick={handleCancel}
 								className='rounded-xl border bg-white px-3 py-1 text-xs font-medium text-gray-700'>
-								取消
+								{t('config.cancel')}
 							</motion.button>
 							<motion.button type='button' whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={handleSave} className='brand-btn px-3 py-1 text-xs'>
-								保存偏移
+								{t('home.saveOffset')}
 							</motion.button>
 						</div>
 					</div>
