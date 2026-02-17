@@ -41,7 +41,7 @@ export default function LikePosition() {
 	if (maxSM) {
 		return (
 			<motion.div 
-				className='mt-6 mx-auto'
+				className='mt-15 mx-auto'
 				initial={{ opacity: 0, scale: 0.6 }}
 				animate={{ opacity: 1, scale: 1 }}
 			>

@@ -67,8 +67,8 @@ export default function Layout({ children }: PropsWithChildren) {
 
 			{maxSM && init && (
 				<>
-					<ScrollTopButton className='bg-brand/20 fixed right-6 bottom-8 z-50 shadow-md' />
-					<MobileLanguageButton className='bg-brand/20 fixed left-6 bottom-8 z-50 shadow-md' />
+					<ScrollTopButton className='bg-brand/20 fixed right-6 bottom-12 z-50 shadow-md' />
+					<MobileLanguageButton className='bg-brand/20 fixed left-6 bottom-28 z-50 shadow-md' />
 				</>
 			)}
 		</>
