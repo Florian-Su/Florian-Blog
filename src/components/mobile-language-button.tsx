@@ -38,7 +38,7 @@ export function MobileLanguageButton({ className, delay }: MobileLanguageButtonP
 			// 设置新的定时器，3秒后隐藏按钮
 			inactivityTimer = setTimeout(() => {
 				setActive(false)
-			}, 5000)
+			}, 3000)
 		}
 		
 		// 初始化时设置为可见
