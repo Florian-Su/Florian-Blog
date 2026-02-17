@@ -45,9 +45,256 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
 				<script
 					dangerouslySetInnerHTML={{
 						__html: `
+					// 检测 Windows 操作系统
 					if (/windows|win32/i.test(navigator.userAgent)) {
 						document.documentElement.classList.add('windows');
 					}
+
+					// 防定向脚本
+					(function() {
+						// 配置项
+						var config = {
+							// 白名单域名 - 允许重定向到的域名
+							allowedDomains: [
+								window.location.hostname,
+								// 可以添加其他信任的域名
+								// 'example.com',
+								// 'trusted-site.org'
+							],
+							// 允许的协议
+							allowedProtocols: ['http:', 'https:'],
+							// 是否启用调试日志
+							enableDebug: false
+						};
+
+						// 日志函数
+						function log(message, level) {
+							if (config.enableDebug) {
+								console[level || 'log']('[Anti-Redirect]', message);
+							}
+						}
+
+						// 1. 点击劫持防护
+						(function() {
+							// 基本检测
+							if (top !== self) {
+								log('Clickjacking detected: iframe embedding', 'warn');
+								try {
+									// 尝试突破 iframe
+									top.location.href = self.location.href;
+								} catch (e) {
+									// 如果被阻止（同源策略），则隐藏页面内容
+									log('Cannot break iframe: hiding content', 'error');
+									document.body.style.display = 'none';
+									document.body.innerHTML = '<h1>Security Alert: Clickjacking Attempt Detected</h1>';
+								}
+							}
+
+							// 检测 X-Frame-Options 头（服务器端应该设置）
+							// 注意：客户端无法直接读取响应头，这里仅作为提醒
+							log('Client-side clickjacking protection enabled', 'info');
+						})();
+
+						// 2. 验证 URL 是否安全
+						function isSafeUrl(url) {
+							try {
+								var urlObj = new URL(url, window.location.origin);
+								
+								// 检查协议
+								if (!config.allowedProtocols.includes(urlObj.protocol)) {
+									log('Unsafe protocol: ' + urlObj.protocol, 'warn');
+									return false;
+								}
+
+								// 检查域名
+								var domain = urlObj.hostname;
+								var isAllowed = config.allowedDomains.some(allowedDomain => {
+									// 支持子域名匹配，例如：*.example.com
+									if (allowedDomain.startsWith('*.')) {
+										return domain === allowedDomain.substring(2) || domain.endsWith('.' + allowedDomain.substring(2));
+									}
+									return domain === allowedDomain;
+								});
+
+								if (!isAllowed) {
+									log('Unsafe domain: ' + domain, 'warn');
+									return false;
+								}
+
+								// 检查是否包含危险字符或路径
+								var dangerousPatterns = [
+									/\.\./, // 路径遍历
+									/\bjavascript:/i, // javascript 协议
+									/\bdata:/i, // data 协议
+									/\bvbscript:/i, // vbscript 协议
+									/\blivescript:/i, // livescript 协议
+									/\bmocha:/i, // mocha 协议
+									/\blucifer:/i, // lucifer 协议
+									/\babout:/i, // about 协议
+									/\bchrome:/i, // chrome 协议
+									/\bfile:/i // file 协议
+								];
+
+								for (var pattern of dangerousPatterns) {
+									if (pattern.test(url)) {
+										log('Unsafe URL pattern detected: ' + url, 'warn');
+										return false;
+									}
+								}
+
+								return true;
+							} catch (e) {
+								log('Invalid URL: ' + url, 'error');
+								return false;
+							}
+						}
+
+						// 3. 重写 window.open 方法
+						var originalOpen = window.open;
+						window.open = function(url, name, features) {
+							log('window.open called with URL: ' + url, 'info');
+							
+							// 验证 URL
+							if (!isSafeUrl(url)) {
+								log('Blocked unsafe window.open: ' + url, 'error');
+								return null;
+							}
+
+							// 增强外部链接安全性
+							var urlObj = new URL(url, window.location.origin);
+							if (urlObj.hostname !== window.location.hostname) {
+								var newFeatures = features ? features + ',noopener,noreferrer' : 'noopener,noreferrer';
+								log('Opening external link with enhanced security: ' + url, 'info');
+								return originalOpen.call(window, url, name, newFeatures);
+							}
+
+							return originalOpen.call(window, url, name, features);
+						};
+
+						// 4. 重写 location 相关方法
+						var originalAssign = window.location.assign;
+						window.location.assign = function(url) {
+							log('location.assign called with URL: ' + url, 'info');
+							if (!isSafeUrl(url)) {
+								log('Blocked unsafe location.assign: ' + url, 'error');
+								throw new Error('Blocked unsafe redirect');
+							}
+							return originalAssign.call(window.location, url);
+						};
+
+						var originalReplace = window.location.replace;
+						window.location.replace = function(url) {
+							log('location.replace called with URL: ' + url, 'info');
+							if (!isSafeUrl(url)) {
+								log('Blocked unsafe location.replace: ' + url, 'error');
+								throw new Error('Blocked unsafe redirect');
+							}
+							return originalReplace.call(window.location, url);
+						};
+
+						// 5. 监控 location.href 属性
+						Object.defineProperty(window.location, 'href', {
+							set: function(url) {
+								log('Attempting to set location.href: ' + url, 'info');
+								if (!isSafeUrl(url)) {
+									log('Blocked unsafe location.href set: ' + url, 'error');
+									throw new Error('Blocked unsafe redirect');
+								}
+								// 调用原始 setter
+								var hrefDescriptor = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(window.location), 'href');
+								if (hrefDescriptor && hrefDescriptor.set) {
+									hrefDescriptor.set.call(window.location, url);
+								}
+							}
+						});
+
+						// 6. 防止恶意脚本注入
+						(function() {
+							// 监控危险函数
+							var dangerousFunctions = ['eval', 'Function', 'setTimeout', 'setInterval'];
+							dangerousFunctions.forEach(funcName => {
+								var originalFunc = window[funcName];
+								if (originalFunc) {
+									window[funcName] = function(...args) {
+										// 检查第一个参数是否为字符串（可能是代码）
+										if (typeof args[0] === 'string') {
+											var code = args[0];
+											// 检测危险模式
+											var dangerousPatterns = [
+												/\blocation\.(href|assign|replace)\(/i,
+												/\bwindow\.open\(/i,
+												/\beval\(/i,
+												/\bFunction\(/i,
+												/\bdocument\.write\(/i,
+												/\binnerHTML\s*=/i
+											];
+
+											for (var pattern of dangerousPatterns) {
+												if (pattern.test(code)) {
+													log('Potential malicious code detected in ' + funcName + ': ' + code.substring(0, 100) + '...', 'error');
+													// 可以选择阻止或仅记录
+													// return null;
+												}
+											}
+										}
+										return originalFunc.apply(this, args);
+									};
+								}
+							});
+						})();
+
+						// 7. 监控表单提交
+						document.addEventListener('submit', function(e) {
+							var form = e.target;
+							if (form && form.action) {
+								log('Form submission to: ' + form.action, 'info');
+								if (!isSafeUrl(form.action)) {
+									log('Blocked unsafe form submission: ' + form.action, 'error');
+									e.preventDefault();
+									alert('Security Alert: Blocked unsafe form submission');
+								}
+							}
+						}, true);
+
+						// 8. 监控链接点击
+						document.addEventListener('click', function(e) {
+							var target = e.target;
+							// 查找最近的链接元素
+							while (target && target.tagName !== 'A') {
+								target = target.parentElement;
+							}
+							if (target && target.href) {
+								log('Link click detected: ' + target.href, 'info');
+								if (!isSafeUrl(target.href)) {
+									log('Blocked unsafe link click: ' + target.href, 'error');
+									e.preventDefault();
+									alert('Security Alert: Blocked unsafe link');
+								}
+							}
+						}, true);
+
+						// 9. 检测可疑的用户代理
+						(function() {
+							var userAgent = navigator.userAgent;
+							var suspiciousAgents = [
+								'bot', 'crawler', 'spider', 'scraper',
+								'curl', 'wget', 'python-requests',
+								'java', 'perl', 'ruby'
+							];
+
+							var isSuspicious = suspiciousAgents.some(agent => 
+								userAgent.toLowerCase().includes(agent)
+							);
+
+							if (isSuspicious) {
+								log('Suspicious user agent detected: ' + userAgent, 'warn');
+								// 可以选择采取额外措施
+							}
+						})();
+
+						// 10. 初始化完成
+						log('Advanced anti-redirect protection initialized', 'info');
+					})();
 			      `
 					}}
 				/>
