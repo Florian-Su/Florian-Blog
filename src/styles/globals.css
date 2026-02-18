@@ -142,6 +142,10 @@
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
+@utility font-averia {
+	font-family: 'Averia Gruesa Libre', 'ZCOOL QingKe HuangYou', 'ZCOOL KuaiLe', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans TC', 'PingFang TC', sans-serif;
+}
+
 @utility no-spinner {
 	&::-webkit-outer-spin-button,
 	&::-webkit-inner-spin-button {

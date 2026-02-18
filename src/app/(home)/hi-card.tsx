@@ -51,7 +51,7 @@ export default function HiCard() {
 					</>
 				)}
 				<img src='/images/avatar.png' className='mx-auto rounded-full' style={{ width: 120, height: 120, boxShadow: ' 0 16px 32px -5px #E2D9CE' }} />
-				<h1 className='font-averia mt-3 text-2xl'>
+				<h1 className='font-averia mt-3 text-2xl' style={{ fontFamily: "'Averia Gruesa Libre', 'ZCOOL QingKe HuangYou', 'ZCOOL KuaiLe', 'ZCOOL QingKe HuangYou', 'ZCOOL KuaiLe', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans TC', 'PingFang TC', sans-serif" }}>
 					{greeting} <br />
 					{language === 'zh-CN' && (
 						<>我是 <span className='text-linear text-[32px]'>{username}</span>，很高兴认识你！</>
