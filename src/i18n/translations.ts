@@ -362,7 +362,8 @@ const translations: Translations = {
       preview: 'Preview',
       cancel: 'Cancel',
       saving: 'Saving...',
-      importKey: 'Import Key'
+      importKey: 'Import Key',
+      save: 'Save'
     },
     siteSettings: {
       siteMeta: {
@@ -670,7 +671,8 @@ const translations: Translations = {
       preview: '預覽',
       cancel: '取消',
       saving: '儲存中...',
-      importKey: '匯入金鑰'
+      importKey: '匯入金鑰',
+      save: '儲存'
     },
     siteSettings: {
       siteMeta: {
