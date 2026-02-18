@@ -57,9 +57,19 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
 							// 白名单域名 - 允许重定向到的域名
 							allowedDomains: [
 								window.location.hostname,
-								// 可以添加其他信任的域名
-								// 'example.com',
-								// 'trusted-site.org'
+								// 常见的信任域名
+								'github.com',
+								'github.io',
+								'gitee.com',
+								'bilibili.com',
+								'qq.com',
+								'weixin.qq.com',
+								'google.com',
+								'facebook.com',
+								'twitter.com',
+								'linkedin.com',
+								'instagram.com',
+								'youtube.com'
 							],
 							// 允许的协议
 							allowedProtocols: ['http:', 'https:'],
@@ -111,27 +121,6 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
 									return false;
 								}
 
-								// 检查域名
-								var domain = urlObj.hostname;
-								var isAllowed = config.allowedDomains.some(allowedDomain => {
-									// 支持子域名匹配，例如：*.example.com
-									if (allowedDomain.startsWith('*.')) {
-										return domain === allowedDomain.substring(2) || domain.endsWith('.' + allowedDomain.substring(2));
-									}
-									return domain === allowedDomain;
-								});
-								
-								// 额外检查：如果是当前域名，直接允许
-								if (domain === window.location.hostname) {
-									log('Allowed current domain: ' + domain, 'info');
-									return true;
-								}
-
-								if (!isAllowed) {
-									log('Unsafe domain: ' + domain, 'warn');
-									return false;
-								}
-
 								// 检查是否包含危险字符或路径
 								var dangerousPatterns = [
 									/\.\./, // 路径遍历
@@ -153,6 +142,18 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
 									}
 								}
 
+								// 检查是否是允许的域名
+								var isAllowedDomain = config.allowedDomains.some(domain => {
+									return urlObj.hostname === domain || urlObj.hostname.endsWith('.' + domain);
+								});
+
+								if (!isAllowedDomain) {
+									log('Domain not in allowed list: ' + urlObj.hostname, 'info');
+									// 不再阻止未在允许列表中的域名，只阻止危险URL
+								}
+
+								// 如果通过了所有检查，视为安全
+								log('Allowed URL: ' + url, 'info');
 								return true;
 							} catch (e) {
 								log('Invalid URL: ' + url, 'error');
