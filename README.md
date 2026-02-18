@@ -1,164 +1,169 @@
-# 2025 Blog
+# 个人博客网站
 
-> 最新引导说明：https://www.yysuni.com/blog/readme
+> 一个功能丰富、易于使用的个人博客系统
 
-该项目使用 Github App 管理项目内容，请保管好后续创建的 **Private key**，不要上传到公开网上。
+该项目是一个基于 Next.js 构建的现代化个人博客网站，支持博客发布、图片管理、项目展示、代码片段分享等多种功能。
 
-## 1. 安装
+## 1. 项目特点
 
-使用该项目可以先不做本地开发，直接部署然后配置环境变量。具体变量名请看下列大写变量
+- 🎨 现代化设计，响应式布局
+- ✏️ 内置 Markdown 编辑器，支持图片上传
+- 📁 分类管理博客内容
+- 🖼️ 图片库功能，支持拖拽上传
+- 📱 移动端适配
+- 🌙 深色模式支持
+- 🚀 快速部署流程
+
+## 2. 安装
+
+### 2.1 本地开发
+
+```bash
+# 安装依赖
+pnpm i
+
+# 启动开发服务器
+pnpm dev
+```
+
+### 2.2 环境变量
+
+项目使用以下环境变量进行配置：
 
 ```ts
 export const GITHUB_CONFIG = {
-	OWNER: process.env.NEXT_PUBLIC_GITHUB_OWNER || 'yysuni',
-	REPO: process.env.NEXT_PUBLIC_GITHUB_REPO || '2025-blog-public',
+	OWNER: process.env.NEXT_PUBLIC_GITHUB_OWNER || 'your-username',
+	REPO: process.env.NEXT_PUBLIC_GITHUB_REPO || 'your-blog-repo',
 	BRANCH: process.env.NEXT_PUBLIC_GITHUB_BRANCH || 'main',
-	APP_ID: process.env.NEXT_PUBLIC_GITHUB_APP_ID || '-'
+	APP_ID: process.env.NEXT_PUBLIC_GITHUB_APP_ID || '-',
+	ENCRYPT_KEY: process.env.NEXT_PUBLIC_GITHUB_ENCRYPT_KEY || 'your-encrypt-key',
+	BLOGGERS_PASSWORD: process.env.NEXT_PUBLIC_GITHUB_BLOGGERS_PASSWORD || 'your-bloggers-password'
+} as const
+
+export const LOGIN_CONFIG = {
+	USERNAME: process.env.NEXT_PUBLIC_LOGIN_USERNAME || 'your-login-username',
+	PASSWORD: process.env.NEXT_PUBLIC_LOGIN_PASSWORD || 'your-login-password'
 } as const
 ```
 
-也可以自己手动先调整安装，可自行 `pnpm i`
+**说明**：
+- `ENCRYPT_KEY`：用于加密敏感信息的密钥
+- `BLOGGERS_PASSWORD`：博主访问密码
+- `LOGIN_CONFIG`：网站后台登录账号密码
 
-## 2. 部署
+## 3. 部署
 
-我这里熟悉 Vercel 部署，就以 Vercel 部署为例子。创建 Project => Import 这个项目
+推荐使用 Vercel 进行部署，步骤如下：
 
-![](https://www.yysuni.com/blogs/readme/730266f17fab9717.png)
+1. 登录 Vercel 账号
+2. 创建新项目，导入你的 GitHub 仓库
+3. 无需特殊配置，直接点击部署
+4. 等待部署完成（约 60 秒）
 
-无需配置，直接点部署
+## 4. GitHub App 配置
 
-![](https://www.yysuni.com/blogs/readme/95dee9a69154d0d0.png)
+为了使用前端编辑功能，需要配置 GitHub App：
 
-大约 60 秒会部署完成，有一个直接 vercel 域名，如：https://2025-blog-public.vercel.app/
+### 4.1 创建 GitHub App
 
-到这里部署网站已经完成了，下一步创建 Github App
+1. 进入 GitHub 个人设置 → Developer Settings
+2. 点击 "New GitHub App"
+3. 填写基本信息（名称和首页 URL 可随意填写）
+4. 关闭 Webhook 功能
+5. 授予仓库的 write 权限
+6. 点击创建
 
-## 3. 创建 Github App 链接仓库
+### 4.2 生成私钥
 
-在 github 个人设置里面，找到最下面的 Developer Settings ，点击进入
+1. 创建 App 后，生成并下载 **Private Key**
+2. 复制页面上的 **App ID**
 
-![](https://www.yysuni.com/blogs/readme/0abb3b592cbedad6.png)
+### 4.3 安装 App 到仓库
 
-进入开发者页面，点击 **New Github App**
+1. 进入 App 的安装页面
+2. 选择授权当前博客仓库
+3. 点击安装
 
-*GitHub App name* 和 *Homepage URL* , 输入什么都不影响。Webhook 也关闭，不需要。
+### 4.4 配置环境变量
 
-![](https://www.yysuni.com/blogs/readme/71dcd9cf8ec967c0.png)
+在 Vercel 项目设置中添加以下环境变量：
 
-只需要注意设置一个仓库 write 权限，其它不用。
+**GitHub 配置**：
+- `NEXT_PUBLIC_GITHUB_OWNER`：你的 GitHub 用户名
+- `NEXT_PUBLIC_GITHUB_REPO`：你的博客仓库名称
+- `NEXT_PUBLIC_GITHUB_APP_ID`：之前复制的 App ID
+- `NEXT_PUBLIC_GITHUB_ENCRYPT_KEY`：用于加密敏感信息的密钥
+- `NEXT_PUBLIC_GITHUB_BLOGGERS_PASSWORD`：博主访问密码
 
-![](https://www.yysuni.com/blogs/readme/2be290016e56cd34.png)
+**登录配置**：
+- `NEXT_PUBLIC_LOGIN_USERNAME`：网站后台登录用户名
+- `NEXT_PUBLIC_LOGIN_PASSWORD`：网站后台登录密码
 
-点击创建，谁能安装这个仓库这个选择无所谓。直接创建。
+添加后，手动触发一次重新部署使环境变量生效。
 
-![](https://www.yysuni.com/blogs/readme/aa002e6805ab2d65.png)
+## 5. 使用指南
 
+### 5.1 发布博客
 
-### 创建密钥
+1. 访问 `/write` 页面
+2. 填写博客标题、内容和分类
+3. 上传封面图片（可选）
+4. 点击发布按钮
+5. 等待部署完成后，刷新页面查看效果
 
-创建好 Github App 后会提示必须创建一个 **Private Key**，直接创建，会自动下载（不见了也不要紧，后面自己再创建再下载就行）。页面上有个 **App ID** 需要复制一下
+### 5.2 管理图片
 
-再切换到安装页面
+1. 访问 `/pictures` 页面
+2. 点击上传按钮添加图片
+3. 支持拖拽上传多张图片
 
-![](https://www.yysuni.com/blogs/readme/c122b1585bb7a46a.png)
+### 5.3 配置网站
 
-这里一定要只**授权当前项目**。
+1. 访问首页，点击右上角的配置按钮
+2. 可配置网站标题、描述、社交媒体链接等
+3. 可自定义网站颜色主题
 
-![](https://www.yysuni.com/blogs/readme/2cf1cee3b04326f1.png)
+## 6. 项目结构
 
-点击安装，就完成了 Github App 管理该仓库的权限设置了。下一步就是让前端知道推送那个项目，就是最开始提到的环境变量。（如果你不会设置环境变量，直接改仓库文件 `src/consts.ts` 也行。因为是公开的，所以环境变量意义也不大）
-
-直接输入这几个环境变量值就行，一般只用设置 OWNER 和 APP_ID。其它配置不用管，直接输入创建就行。
-
-![](https://www.yysuni.com/blogs/readme/c5a049d737848abf.png)
-
-设置完成后，需要手动再部署一次，让环境变量生效。
-* 可以直接 push 一次仓库代码会触发部署
-* 也可以手动选择创建一次部署
-![](https://www.yysuni.com/blogs/readme/59a802ed8d1c3a13.png)
-
-## 4. 完成
-
-现在，部署的这个网站就可以开始使用前端改内容了。比如更改一个分享内容。
-
-**提示**，网站前端页面删改完提示成功之后，你需要等待后台的部署完成，再刷新页面才能完成服务器内容的更新哦。
-
-## 5. 删除
-
-使用这个项目应该第一件事需要删除我的 blog，单独删除，批量删除已完成。
-
-## 6. 配置
-
-大部分页面右上角都会有一个编辑按钮，意味着你可以使用 **private key** 进行配置部署。
-
-### 6.1 网站配置
-
-首页有一个不显眼的配置按钮，点击就能看到现在可以配置的内容。
-
-![](https://www.yysuni.com/blogs/readme/cddb4710e08a5069.png)
-
-## 7. 写 blog
-
-写 blog 的图片管理，可能会有疑惑。图片管理推荐逻辑是先点击 **+ 号** 添加图片，（推荐先压缩好，尺寸推荐宽度不超过 1200）。然后将上传好的图片直接拖入文案编辑区，这就已经添加好了，点击右上角预览就可以看到效果。
-
-## 8. 写给非前端
-
-非前端配置内容，还是需要一个文件指引。下面写一些更细致的代码配置。
-
-### 8.1 移除 Liquid Grass
-
-进入 `src/layout/index.tsx` 文件，删除两行代码，然后提交代码到你的 github
-```tsx
-const LiquidGrass = dynamic(() => import('@/components/liquid-grass'), { ssr: false })
-// 中间省略...
-<LiquidGrass /> // 第 53 行
+```
+src/
+├── app/             # 应用路由
+│   ├── (home)/      # 首页相关组件
+│   ├── blog/        # 博客页面
+│   ├── write/       # 编辑器页面
+│   ├── pictures/    # 图片库
+│   └── share/       # 分享内容
+├── components/      # 通用组件
+├── lib/             # 工具函数
+└── styles/          # 全局样式
 ```
 
-![](https://www.yysuni.com/blogs/readme/f70ff3fe3a77f193.png)
+## 7. 技术栈
 
-### 8.2 配置首页内容
+- Next.js 14
+- React 18
+- TypeScript
+- Tailwind CSS
+- Markdown
 
-首页的内容现在只能前端配置一部分，所以代码更改在 `src/app/(home)` 目录，这个目录代表首页所有文件。首页的具体文件为  `src/app/(home)/page.tsx`
+## 8. 注意事项
 
- ![](https://www.yysuni.com/blogs/readme/011679cd9bf73602.png)
+- 网站前端编辑内容后，需要等待后台部署完成才能看到更新
+- 图片上传建议先压缩，宽度不超过 1200px 以获得更好的加载性能
+- 首次使用时，建议删除默认示例内容，添加自己的内容
 
-这里可以看到有很多 `Card` 文件，需要改那个首页 Card 内容就可以点入那个具体文件修改。
+## 9. 自定义开发
 
-比如中间的内容，为 `HiCard`，点击 `hi-card.tsx` 文件，即可更改其内容。
+### 9.1 修改首页内容
 
-![](https://www.yysuni.com/blogs/readme/20b0791d012163ee.png)
+首页内容位于 `src/app/(home)` 目录，可根据需要修改各个卡片组件。
 
-## 9. 互助群
+### 9.2 添加新功能
 
-对于完全不是**程序员**的用户，确实会对于更新代码后，如何同步，如何**合并代码**手足无措。我创建了一个 **QQ群**（加群会简单点），或者 vx 群还是 tg 群会好一点可以 issue 里面说下就行。
+可以在 `src/app` 目录下添加新的路由和页面，扩展网站功能。
 
-QQ 群：[https://qm.qq.com/q/spdpenr4k2](https://qm.qq.com/q/spdpenr4k2)
-> 不好意思，之前的那个qq群ID（1021438316），不知道为啥搜不到😂
+---
 
-微信群：刚建好了一个微信群，没有 qq 的可以用这个微信群
-![](https://www.yysuni.com/blogs/readme/343f2c62035b8e23.webp)
+## 项目来源
 
-tg 群：1月1号，才创建的 tg 群 https://t.me/public_blog_2025
-
-
-应该主要是我自己亲自帮助你们遇到问题怎么办。（后续看看有没有好心人）
-
-希望多多的非程序员加入 blogger 行列，web blog 还是很好玩的，属于自己的 blog 世界。
-
-游戏资产不一定属于你的，你只有**使用权**，但这个 blog **网站、内容、仓库一定是属于你的**
-
-#### 特殊的导航 Card
-
-因为这个 Card 是全局都在的，所以放在了 `src/components` 目录
-
-![](https://www.yysuni.com/blogs/readme/9780c38f886322fd.png)
-
-## Star History
-
-<a href="https://www.star-history.com/#YYsuni/2025-blog-public&type=date&legend=top-left">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=YYsuni/2025-blog-public&type=date&theme=dark&legend=top-left" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=YYsuni/2025-blog-public&type=date&legend=top-left" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=YYsuni/2025-blog-public&type=date&legend=top-left" />
- </picture>
-</a>
+本项目基于 [YYsuni/2025-blog-public](https://github.com/YYsuni/2025-blog-public) 进行了大量修改和扩展，保留了原项目的基本结构和部分功能，同时添加了更多特性和改进。
