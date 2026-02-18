@@ -15,3 +15,12 @@ export const GITHUB_CONFIG = {
 	ENCRYPT_KEY: process.env.NEXT_PUBLIC_GITHUB_ENCRYPT_KEY || 'wudishiduomejimo',
 	BLOGGERS_PASSWORD: process.env.NEXT_PUBLIC_BLOGGERS_PASSWORD || 'zhegeshimima',
 } as const
+
+/**
+ * 登录配置
+ */
+export const LOGIN_CONFIG = {
+	// 默认登录账号密码
+	USERNAME: process.env.NEXT_PUBLIC_LOGIN_USERNAME || 'dengluzhanghao',
+	PASSWORD: process.env.NEXT_PUBLIC_LOGIN_PASSWORD || 'denglumima',
+} as const

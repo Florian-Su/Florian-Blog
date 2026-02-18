@@ -18,6 +18,18 @@ const translations: Translations = {
       submit: '确认'
     },
     write: '写文章',
+    login: {
+      title: '登录',
+      description: '请输入账号密码以登录',
+      username: '账号',
+      password: '密码',
+      incorrect: '账号或密码错误，请重试！',
+      error: '登录失败，请重试',
+      cancel: '取消',
+      submit: '登录',
+      loading: '登录中...',
+      logout: '登出'
+    },
     languages: {
       'zh-CN': '简体中文',
       'en': 'English',
@@ -279,6 +291,18 @@ const translations: Translations = {
       submit: 'Submit'
     },
     write: 'Write',
+    login: {
+      title: 'Login',
+      description: 'Please enter your username and password to login',
+      username: 'Username',
+      password: 'Password',
+      incorrect: 'Incorrect username or password, please try again!',
+      error: 'Login failed, please try again',
+      cancel: 'Cancel',
+      submit: 'Login',
+      loading: 'Logging in...',
+      logout: 'Logout'
+    },
     languages: {
       'zh-CN': 'Simplified Chinese',
       'en': 'English',
@@ -540,6 +564,18 @@ const translations: Translations = {
       submit: '確認'
     },
     write: '寫文章',
+    login: {
+      title: '登入',
+      description: '請輸入帳號密碼以登入',
+      username: '帳號',
+      password: '密碼',
+      incorrect: '帳號或密碼錯誤，請重試！',
+      error: '登入失敗，請重試',
+      cancel: '取消',
+      submit: '登入',
+      loading: '登入中...',
+      logout: '登出'
+    },
     languages: {
       'zh-CN': '簡體中文',
       'en': 'English',

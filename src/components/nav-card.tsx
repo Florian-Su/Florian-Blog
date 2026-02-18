@@ -25,6 +25,7 @@ import { useConfigStore } from '@/app/(home)/stores/config-store'
 import { HomeDraggableLayer } from '@/app/(home)/home-draggable-layer'
 import { useLanguage } from '@/i18n/context'
 import { PasswordModal } from './password-modal'
+import { useLocalAuthStore } from '@/hooks/use-local-auth'
 
 const list = [
   {
@@ -70,6 +71,7 @@ export default function NavCard() {
   const { siteContent, cardStyles } = useConfigStore()
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false)
   const { t } = useLanguage()
+  const { isLoggedIn, checkExpiration } = useLocalAuthStore()
   const styles = cardStyles.navCard
   const hiCardStyles = cardStyles.hiCard
 
@@ -78,9 +80,11 @@ export default function NavCard() {
     return index >= 0 ? index : undefined
   }, [pathname])
 
+  // 组件加载时检查登录状态是否过期
   useEffect(() => {
+    checkExpiration()
     setShow(true)
-  }, [])
+  }, [checkExpiration])
 
   let form = useMemo(() => {
     if (pathname == '/') return 'full'
@@ -183,7 +187,13 @@ export default function NavCard() {
                     const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
                       if (isBloggersLink) {
                         e.preventDefault()
-                        setIsPasswordModalOpen(true)
+                        // 如果用户已登录，直接跳转到优秀博客页面
+                        if (isLoggedIn) {
+                          window.location.href = '/bloggers'
+                        } else {
+                          // 未登录，打开密码弹窗
+                          setIsPasswordModalOpen(true)
+                        }
                       }
                     }
 
