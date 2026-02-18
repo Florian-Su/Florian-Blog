@@ -97,6 +97,11 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
 
 						// 2. 验证 URL 是否安全
 						function isSafeUrl(url) {
+							// 如果url为空字符串，默认为当前页面，视为安全
+							if (!url || url.trim() === '') {
+								log('Empty URL, assuming current page', 'info');
+								return true;
+							}
 							try {
 								var urlObj = new URL(url, window.location.origin);
 								
@@ -115,6 +120,12 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
 									}
 									return domain === allowedDomain;
 								});
+								
+								// 额外检查：如果是当前域名，直接允许
+								if (domain === window.location.hostname) {
+									log('Allowed current domain: ' + domain, 'info');
+									return true;
+								}
 
 								if (!isAllowed) {
 									log('Unsafe domain: ' + domain, 'warn');
@@ -258,11 +269,27 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
 							var form = e.target;
 							if (form && form.action) {
 								log('Form submission to: ' + form.action, 'info');
+								
+								// 检查是否是站内表单
+								try {
+									var urlObj = new URL(form.action, window.location.origin);
+									// 如果是站内链接，直接允许
+									if (urlObj.hostname === window.location.hostname) {
+										log('Allowed internal form submission: ' + form.action, 'info');
+										return;
+									}
+								} catch (e) {
+									log('Invalid form action URL: ' + form.action, 'error');
+								}
+								
 								if (!isSafeUrl(form.action)) {
 									log('Blocked unsafe form submission: ' + form.action, 'error');
 									e.preventDefault();
 									alert('Security Alert: Blocked unsafe form submission');
 								}
+							} else {
+								// 如果没有action属性，视为站内表单，直接允许
+								log('Form with no action, assuming internal submission', 'info');
 							}
 						}, true);
 

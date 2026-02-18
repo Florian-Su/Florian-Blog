@@ -50,7 +50,9 @@ export function LoginModal({ open, onClose }: { open: boolean; onClose: () => vo
             id='username'
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className='w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand'
+            placeholder={t('login.usernamePlaceholder')}
+            className='w-full px-4 py-3 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand bg-white/90 text-black'
+            style={{ cursor: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'24\' height=\'24\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'black\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3E%3Cline x1=\'12\' y1=\'6\' x2=\'12\' y2=\'18\'/%3E%3C/svg%3E"), text' }}
             required
           />
         </div>
@@ -64,7 +66,9 @@ export function LoginModal({ open, onClose }: { open: boolean; onClose: () => vo
             id='password'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className='w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand'
+            placeholder={t('login.passwordPlaceholder')}
+            className='w-full px-4 py-3 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand bg-white/90 text-black'
+            style={{ cursor: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'24\' height=\'24\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'black\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3E%3Cline x1=\'12\' y1=\'6\' x2=\'12\' y2=\'18\'/%3E%3C/svg%3E"), text' }}
             required
           />
         </div>
