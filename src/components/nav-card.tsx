@@ -43,8 +43,8 @@ const list = [
   {
     icon: AboutOutlineSVG,
     iconActive: AboutFilledSVG,
-    key: 'nav.about',
-    href: '/about'
+    key: 'nav.comments',
+    href: '/comments'
   },
   {
     icon: ShareOutlineSVG,

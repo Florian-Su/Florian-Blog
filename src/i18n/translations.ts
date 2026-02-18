@@ -5,7 +5,7 @@ const translations: Translations = {
     nav: {
       blog: '所有文章',
       projects: '我的项目',
-      about: '关于网站',
+      comments: '评论区',
       share: '推荐分享',
       bloggers: '优秀博客'
     },
@@ -313,7 +313,7 @@ const translations: Translations = {
     nav: {
       blog: 'All Posts',
       projects: 'My Projects',
-      about: 'About Site',
+      comments: 'Comments Section',
       share: 'Recommendations',
       bloggers: 'Great Blogs'
     },
@@ -621,7 +621,7 @@ const translations: Translations = {
     nav: {
       blog: '所有文章',
       projects: '我的專案',
-      about: '關於網站',
+      comments: '評論區',
       share: '推薦分享',
       bloggers: '優秀部落格'
     },
