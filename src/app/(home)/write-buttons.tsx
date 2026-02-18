@@ -27,19 +27,6 @@ export default function WriteButton() {
 	const [show, setShow] = useState(false)
 	const [loginModalOpen, setLoginModalOpen] = useState(false)
 
-	// 组件加载时检查登录状态是否过期
-	useEffect(() => {
-		checkExpiration()
-		setTimeout(() => setShow(true), styles.order * ANIMATION_DELAY * 1000)
-	}, [styles.order, checkExpiration])
-
-	if (maxSM) return null
-
-	if (!show) return null
-
-	const x = styles.offsetX !== null ? center.x + styles.offsetX : center.x + CARD_SPACING + hiCardStyles.width / 2
-	const y = styles.offsetY !== null ? center.y + styles.offsetY : center.y - clockCardStyles.offset - styles.height - CARD_SPACING / 2 - clockCardStyles.height
-
 	const handleLogin = () => {
 		setLoginModalOpen(true)
 	}
@@ -48,19 +35,37 @@ export default function WriteButton() {
 		logout()
 	}
 
+	// 组件加载时检查登录状态是否过期
+	useEffect(() => {
+		checkExpiration()
+		setTimeout(() => setShow(true), styles.order * ANIMATION_DELAY * 1000)
+	}, [styles.order, checkExpiration])
+
+
+	if (maxSM) return null
+
+	if (!show) return null
+
+	const x = styles.offsetX !== null ? center.x + styles.offsetX : center.x + CARD_SPACING + hiCardStyles.width / 2
+	const y = styles.offsetY !== null ? center.y + styles.offsetY : center.y - clockCardStyles.offset - styles.height - CARD_SPACING / 2 - clockCardStyles.height
+
 	return (
 		<HomeDraggableLayer cardKey='writeButtons' x={x} y={y} width={styles.width} height={styles.height}>
 			<motion.div initial={{ left: x, top: y }} animate={{ left: x, top: y }} className='absolute flex items-center gap-4'>
-				{/* 登录/登出按钮 */}
-				<motion.button
-					onClick={isLoggedIn ? handleLogout : handleLogin}
-					initial={{ opacity: 0, scale: 0.6 }}
-					animate={{ opacity: 1, scale: 1 }}
-					whileHover={{ scale: 1.05 }}
-					whileTap={{ scale: 0.95 }}
-					className='brand-btn whitespace-nowrap'>
-					<span>{isLoggedIn ? t('login.logout') : t('login.submit')}</span>
-				</motion.button>
+				{/* 登录/登出按钮 - 登录使用快捷键 Ctrl/Cmd + L，登出显示按钮 */}
+				{/* 登录按钮已隐藏，使用快捷键 Ctrl/Cmd + L 打开登录 */}
+				{/* 登出按钮在登录后显示 */}
+				{isLoggedIn && (
+					<motion.button
+						onClick={handleLogout}
+						initial={{ opacity: 0, scale: 0.6 }}
+						animate={{ opacity: 1, scale: 1 }}
+						whileHover={{ scale: 1.05 }}
+						whileTap={{ scale: 0.95 }}
+						className='brand-btn whitespace-nowrap'>
+						<span>{t('login.logout')}</span>
+					</motion.button>
+				)}
 				
 				<LanguageSelector />
 				

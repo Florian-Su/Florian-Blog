@@ -17,9 +17,11 @@ import { useLayoutEditStore } from './stores/layout-edit-store'
 import { useConfigStore } from './stores/config-store'
 import { toast } from 'sonner'
 import ConfigDialog from './config-dialog/index'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import SnowfallBackground from '@/layout/backgrounds/snowfall'
 import { useLanguage } from '@/i18n/context'
+import { LoginModal } from '@/components/login-modal'
+import { useLocalAuthStore } from '@/hooks/use-local-auth'
 
 export default function Home() {
 	const { maxSM } = useSize()
@@ -28,6 +30,8 @@ export default function Home() {
 	const saveEditing = useLayoutEditStore(state => state.saveEditing)
 	const cancelEditing = useLayoutEditStore(state => state.cancelEditing)
 	const { t } = useLanguage()
+	const { isLoggedIn, logout, checkExpiration } = useLocalAuthStore()
+	const [loginModalOpen, setLoginModalOpen] = useState(false)
 
 	const handleSave = () => {
 		saveEditing()
@@ -40,10 +44,29 @@ export default function Home() {
 	}
 
 	useEffect(() => {
+		// 检查登录状态是否过期
+		checkExpiration()
+
 		const handleKeyDown = (e: KeyboardEvent) => {
-			if ((e.ctrlKey || e.metaKey) && (e.key === 'l' || e.key === ',')) {
+			// 打开配置对话框
+			if ((e.ctrlKey || e.metaKey) && e.key === ',') {
 				e.preventDefault()
 				setConfigDialogOpen(true)
+			}
+			// 打开登录模态框或登出
+			if ((e.ctrlKey || e.metaKey) && (e.key === 'L' || e.key === 'l')) {
+				e.preventDefault()
+				if (e.shiftKey) {
+					// Ctrl/Cmd + Shift + L 登出
+					if (isLoggedIn) {
+						logout()
+					}
+				} else {
+					// Ctrl/Cmd + L 打开登录模态框
+					if (!isLoggedIn) {
+						setLoginModalOpen(true)
+					}
+				}
 			}
 		}
 
@@ -51,7 +74,7 @@ export default function Home() {
 		return () => {
 			window.removeEventListener('keydown', handleKeyDown)
 		}
-	}, [setConfigDialogOpen])
+	}, [setConfigDialogOpen, isLoggedIn, logout, setLoginModalOpen, checkExpiration])
 
 	return (
 		<>
@@ -94,6 +117,10 @@ export default function Home() {
 
 			{siteContent.enableChristmas && <SnowfallBackground zIndex={2} count={!maxSM ? 125 : 20} />}
 			<ConfigDialog open={configDialogOpen} onClose={() => setConfigDialogOpen(false)} />
+			<LoginModal
+				open={loginModalOpen}
+				onClose={() => setLoginModalOpen(false)}
+			/>
 		</>
 	)
 }
