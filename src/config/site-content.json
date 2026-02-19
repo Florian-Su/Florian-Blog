@@ -1,8 +1,8 @@
 {
 	"meta": {
-		"title": "Amis's Blog",
-		"description": "Amis 的个人博客，记录开发、探索、笔记。 更新代码仓库。",
-		"username": "Amis"
+		"title": "Florian's Blog",
+		"description": "Florian's Blog",
+		"username": "Florian"
 	},
 	"theme": {
 		"colorBrand": "#16DB9F",
@@ -47,34 +47,45 @@
 		{
 			"id": "",
 			"url": ""
+		},
+		{
+			"id": "url-1771521237007",
+			"url": "https://api.xinyew.cn/api/bing"
 		}
 	],
-	"currentBackgroundImageId": "",
+	"currentBackgroundImageId": "url-1771521237007",
 	"socialButtons": [
+		{
+			"id": "juejin",
+			"type": "link",
+			"value": "https://qun.qq.com/universal-share/share?ac=1&authKey=0NKtvsAn%2F3X4Sb%2FM%2FgpZ9%2Fbz5PIlAtoJM%2FNmTDMdVUHzGTtiy59sXO1SSbrm53by&busi_data=eyJncm91cENvZGUiOiIyNDIxMjk2ODkiLCJ0b2tlbiI6ImN6NWt4Y1lzdG91dVMrV3RCVlRveVNrak1GUUhrUlY2cG1RMHY2UUwyL0NCM2ZPTTFDUU91SCtjb3NHTnl2QmYiLCJ1aW4iOiIyNDc5NjEwMzk0In0%3D&data=0jiH6bFr2HAipguoPrNk7Qadq8eSs4QGHnWkdsbcK6RHbhe7xMFmOeilG1nkGT3yRHYakWcpvkRdO0EkjPwh3Q&svctype=4&tempid=h5_group_info",
+			"label": "QQ",
+			"order": 1
+		},
+		{
+			"id": "button-1771521045174",
+			"type": "bilibili",
+			"value": "https://space.bilibili.com/3493078675491581",
+			"label": "Bilibili",
+			"order": 2
+		},
 		{
 			"id": "github",
 			"type": "github",
 			"value": "https://github.com/AmisKwok",
 			"label": "Github",
 			"order": 3
-		},
-		{
-			"id": "juejin",
-			"type": "link",
-			"value": "https://gitee.com/AmisKwok",
-			"label": "Gitee",
-			"order": 2
 		}
 	],
 	"clockShowSeconds": false,
 	"summaryInContent": false,
 	"isCachePem": false,
-	"hideEditButton": false,
-	"enableCategories": true,
+	"hideEditButton": true,
+	"enableCategories": false,
 	"currentHatIndex": 24,
 	"hatFlipped": false,
 	"enableChristmas": true,
-	"enableBackgroundBlur": false,
+	"enableBackgroundBlur": true,
 	"beian": {
 		"text": "",
 		"link": ""
