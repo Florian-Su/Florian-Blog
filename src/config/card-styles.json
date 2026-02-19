@@ -55,7 +55,7 @@
 		"order": 7,
 		"offsetX": null,
 		"offsetY": null,
-		"enabled": true
+		"enabled": false
 	},
 	"articleCard": {
 		"width": 266,
@@ -79,7 +79,7 @@
 		"order": 2,
 		"offsetX": -524,
 		"offsetY": -290,
-		"enabled": true
+		"enabled": false
 	},
 	"likePosition": {
 		"width": 54,
