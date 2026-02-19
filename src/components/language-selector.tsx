@@ -68,9 +68,9 @@ export default function LanguageSelector({ direction = 'down', mobile = false, o
         whileTap={{ scale: 0.95 }}
 
         //这个是语言按钮
-        className={mobile ? "card whitespace-nowrap flex items-center gap-2 rounded-full p-3" : "brand-btn whitespace-nowrap flex items-center gap-2"}
+        //className={mobile ? "card whitespace-nowrap flex items-center gap-2 rounded-full p-3" : "brand-btn whitespace-nowrap flex items-center gap-2"}
         // 这个是语言按钮（毛玻璃效果）
-        // className={mobile ? "card language-selector-btn whitespace-nowrap flex items-center gap-2 rounded-full p-3" : "brand-btn language-selector-btn whitespace-nowrap flex items-center gap-2"}
+        className={mobile ? "card language-selector-btn whitespace-nowrap flex items-center gap-2 rounded-full p-3" : "brand-btn language-selector-btn whitespace-nowrap flex items-center gap-2"}
       >
         <span>{currentLanguage?.flag}</span>
         <span>{currentLanguage?.label.split(' ')[0]}</span>
