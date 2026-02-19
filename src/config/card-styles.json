@@ -46,7 +46,7 @@
 		"height": 48,
 		"order": 6,
 		"offsetX": -507,
-		"offsetY": -16,
+		"offsetY": -11,
 		"enabled": true
 	},
 	"shareCard": {
@@ -75,7 +75,7 @@
 	},
 	"navCard": {
 		"width": 314,
-		"height": 230,
+		"height": 243,
 		"order": 2,
 		"offsetX": -503,
 		"offsetY": -277,
