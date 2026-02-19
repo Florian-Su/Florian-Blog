@@ -35,28 +35,10 @@ const list = [
     href: '/blog'
   },
   {
-    icon: ProjectsOutlineSVG,
-    iconActive: ProjectsFilledSVG,
-    key: 'nav.projects',
-    href: '/projects'
-  },
-  {
     icon: AboutOutlineSVG,
     iconActive: AboutFilledSVG,
     key: 'nav.comments',
     href: '/comments'
-  },
-  {
-    icon: ShareOutlineSVG,
-    iconActive: ShareFilledSVG,
-    key: 'nav.share',
-    href: '/share'
-  },
-  {
-    icon: WebsiteOutlineSVG,
-    iconActive: WebsiteFilledSVG,
-    key: 'nav.bloggers',
-    href: '/bloggers'
   }
 ]
 
