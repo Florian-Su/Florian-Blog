@@ -80,6 +80,20 @@
 			"value": "1223456789",
 			"label": "",
 			"order": 4
+		},
+		{
+			"id": "button-1771607124455",
+			"type": "qqGroup",
+			"value": "https://qun.qq.com/universal-share/share?ac=1&authKey=0NKtvsAn%2F3X4Sb%2FM%2FgpZ9%2Fbz5PIlAtoJM%2FNmTDMdVUHzGTtiy59sXO1SSbrm53by&busi_data=eyJncm91cENvZGUiOiIyNDIxMjk2ODkiLCJ0b2tlbiI6ImN6NWt4Y1lzdG91dVMrV3RCVlRveVNrak1GUUhrUlY2cG1RMHY2UUwyL0NCM2ZPTTFDUU91SCtjb3NHTnl2QmYiLCJ1aW4iOiIyNDc5NjEwMzk0In0%3D&data=0jiH6bFr2HAipguoPrNk7Qadq8eSs4QGHnWkdsbcK6RHbhe7xMFmOeilG1nkGT3yRHYakWcpvkRdO0EkjPwh3Q&svctype=4&tempid=h5_group_info",
+			"label": "",
+			"order": 5
+		},
+		{
+			"id": "button-1771607143989",
+			"type": "qqGroup",
+			"value": "/images/social-buttons/15740b432bfd21a0.png",
+			"label": "",
+			"order": 6
 		}
 	],
 	"clockShowSeconds": false,
