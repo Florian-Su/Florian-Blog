@@ -16,37 +16,37 @@
 		"enabled": true
 	},
 	"clockCard": {
-		"width": 350,
-		"height": 214,
+		"width": 240,
+		"height": 143,
 		"offset": 92,
 		"order": 4,
-		"offsetX": 207,
-		"offsetY": -268,
+		"offsetX": 209,
+		"offsetY": -267,
 		"enabled": true
 	},
 	"calendarCard": {
-		"width": 350,
-		"height": 286,
+		"width": 378,
+		"height": 303,
 		"order": 5,
 		"offsetX": 209,
 		"offsetY": -11,
 		"enabled": true
 	},
 	"musicCard": {
-		"width": 380,
-		"height": 60,
+		"width": 435,
+		"height": 55,
 		"offset": 120,
 		"order": 6,
-		"offsetX": -181,
-		"offsetY": 170,
+		"offsetX": 214,
+		"offsetY": -95,
 		"enabled": true
 	},
 	"socialButtons": {
 		"width": 315,
 		"height": 48,
 		"order": 6,
-		"offsetX": -507,
-		"offsetY": -11,
+		"offsetX": -505,
+		"offsetY": 1,
 		"enabled": true
 	},
 	"shareCard": {
@@ -58,8 +58,8 @@
 		"enabled": false
 	},
 	"articleCard": {
-		"width": 317,
-		"height": 191,
+		"width": 316,
+		"height": 213,
 		"order": 8,
 		"offsetX": -504,
 		"offsetY": 64,
@@ -74,11 +74,11 @@
 		"enabled": true
 	},
 	"navCard": {
-		"width": 314,
-		"height": 243,
+		"width": 283,
+		"height": 263,
 		"order": 2,
-		"offsetX": -503,
-		"offsetY": -277,
+		"offsetX": -468,
+		"offsetY": -278,
 		"enabled": false
 	},
 	"likePosition": {
