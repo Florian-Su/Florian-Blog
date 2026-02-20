@@ -73,6 +73,13 @@
 			"value": "https://github.com/AmisKwok",
 			"label": "Github",
 			"order": 3
+		},
+		{
+			"id": "button-1771606415269",
+			"type": "qqGroup",
+			"value": "1223456789",
+			"label": "",
+			"order": 4
 		}
 	],
 	"clockShowSeconds": false,
