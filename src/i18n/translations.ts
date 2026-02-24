@@ -7,6 +7,7 @@ const translations: Translations = {
     projects: '我的项目',
     comments: '留言区',
     share: '推荐分享',
+    links: '友链',
     bloggers: '秘密空间'
   },
     password: {
@@ -179,7 +180,7 @@ const translations: Translations = {
           morning: '早上好',
           afternoon: '下午好',
           evening: '晚上好',
-          night: '晚安'
+          night: '晚安啦，还没睡吗?'
         },
         introduction: '我是 {username}，很高兴认识你！'
       },
@@ -357,6 +358,7 @@ const translations: Translations = {
     projects: 'My Projects',
     comments: 'Guestbook',
     share: 'Recommendations',
+    links: 'Friends Link',
     bloggers: 'Secret Space'
   },
     password: {
@@ -529,7 +531,7 @@ const translations: Translations = {
           morning: 'Good Morning',
           afternoon: 'Good Afternoon',
           evening: 'Good Evening',
-          night: 'Good Night'
+          night: 'Good morning! Did you get any sleep?'
         },
         introduction: "I'm {username}, Nice to meet you!"
       },
@@ -707,6 +709,7 @@ const translations: Translations = {
     projects: '我的專案',
     comments: '留言區',
     share: '推薦分享',
+    links: '友鏈',
     bloggers: '秘密空間'
   },
     password: {
@@ -879,7 +882,7 @@ const translations: Translations = {
           morning: '早上好',
           afternoon: '下午好',
           evening: '晚上好',
-          night: '晚安'
+          night: '晚安，還沒睡嗎？'
         },
         introduction: '我是 {username}，很高興認識你！'
       },
@@ -1053,12 +1056,13 @@ const translations: Translations = {
   },
   'ja': {
     nav: {
-      blog: 'すべての記事',
-      projects: 'マイプロジェクト',
-      comments: 'ゲストブック',
-      share: 'おすすめ',
-      bloggers: '秘密の空間'
-    },
+    blog: 'すべての記事',
+    projects: 'マイプロジェクト',
+    comments: 'ゲストブック',
+    share: 'おすすめ',
+    links: '友達リンク',
+    bloggers: '秘密の空間'
+  },
     password: {
       required: 'パスワードが必要',
       pleaseEnter: '続行するにはアクセスパスワードを入力してください',
@@ -1230,7 +1234,7 @@ const translations: Translations = {
           morning: 'おはようございます',
           afternoon: 'こんにちは',
           evening: 'こんばんは',
-          night: 'おやすみなさい'
+          night: 'おはよう！寝ましたか？'
         },
         introduction: '私は {username} です、はじめまして！'
       },
@@ -1408,6 +1412,7 @@ const translations: Translations = {
       projects: '내 프로젝트',
       comments: '방명록',
       share: '추천 공유',
+      links: '친구 링크',
       bloggers: '비밀 공간'
     },
     password: {
@@ -1582,7 +1587,7 @@ const translations: Translations = {
           morning: '좋은 아침',
           afternoon: '안녕하세요',
           evening: '좋은 저녁',
-          night: '안녕히 주무세요'
+          night: '좋은 아침! 잠을 잘 잤어요?'
         },
         introduction: '저는 {username}입니다, 만나서 반갑습니다!'
       },

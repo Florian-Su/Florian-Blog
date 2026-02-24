@@ -23,6 +23,7 @@ import projectsLottie from '@/lottie/projects.json'
 import commentsLottie from '@/lottie/comments.json'
 import shareLottie from '@/lottie/share.json'
 import bloggersLottie from '@/lottie/bloggers.json'
+import trainLottie from '@/lottie/RP_Train.json'
 
 const list = [
   {
@@ -89,7 +90,7 @@ export default function NavCard() {
 
   const size = useMemo(() => {
     if (form === 'mini') return { width: 64, height: 64 }
-    else if (form === 'icons') return { width: 340, height: 64 }
+    else if (form === 'icons') return { width: 380, height: 64 }
     else return { width: styles.width, height: styles.height }
   }, [form, styles])
 
@@ -163,7 +164,11 @@ export default function NavCard() {
                     const isBloggersLink = item.key === 'nav.bloggers'
 
                     const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-                      if (isBloggersLink) {
+                      if (item.isExternal) {
+                        // 外部链接在新窗口打开
+                        e.preventDefault()
+                        window.open(item.href, '_blank', 'noopener,noreferrer')
+                      } else if (isBloggersLink) {
                         e.preventDefault()
                         // 如果用户已登录，直接跳转到优秀博客页面
                         if (isLoggedIn) {
